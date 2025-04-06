@@ -344,7 +344,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                     >
                       <td>
                         <button
-                          className={`user-avatar p-3 rounded-full ${
+                          className={`user-avatar p-2 rounded-full w-8 h-8 ${
                             selectedItems.has(folder.prefix) 
                               ? 'text-[var(--primary)]' 
                               : 'text-[var(--app-text-secondary)]'
@@ -354,8 +354,8 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                           aria-pressed={selectedItems.has(folder.prefix)}
                         >
                           {selectedItems.has(folder.prefix) 
-                            ? <Check className="w-5 h-5" aria-hidden="true" /> 
-                            : <MoreHorizontal className="w-5 h-5" aria-hidden="true" />
+                            ? <Check className="w-4 h-4" aria-hidden="true" /> 
+                            : <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
                           }
                         </button>
                       </td>
@@ -381,12 +381,12 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <td>-</td>
                       <td>
                         <button 
-                          className="navigation-button p-2 rounded-full hover:bg-[var(--app-surface-hover)]"
+                          className="navigation-button p-2 rounded-full w-8 h-8"
                           onClick={() => navigateToFolder(folder.prefix)}
                           title="Open folder"
                           aria-label={`Abrir carpeta ${folder.name}`}
                         >
-                          <ChevronLeft className="w-5 h-5 rotate-180" aria-hidden="true" />
+                          <ChevronLeft className="w-4 h-4 rotate-180" aria-hidden="true" />
                         </button>
                       </td>
                     </tr>
@@ -400,7 +400,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                     >
                       <td>
                         <button
-                          className={`user-avatar p-3 rounded-full ${
+                          className={`user-avatar p-2 rounded-full w-8 h-8 ${
                             selectedItems.has(file.key) 
                               ? 'text-[var(--primary)]' 
                               : 'text-[var(--app-text-secondary)]'
@@ -410,8 +410,8 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                           aria-pressed={selectedItems.has(file.key)}
                         >
                           {selectedItems.has(file.key) 
-                            ? <Check className="w-5 h-5" aria-hidden="true" /> 
-                            : <MoreHorizontal className="w-5 h-5" aria-hidden="true" />
+                            ? <Check className="w-4 h-4" aria-hidden="true" /> 
+                            : <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
                           }
                         </button>
                       </td>
@@ -425,11 +425,11 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <td>{formatDate(file.lastModified)}</td>
                       <td>
                         <button 
-                          className="navigation-button p-2 rounded-full hover:bg-[var(--app-surface-hover)]"
+                          className="navigation-button p-2 rounded-full w-8 h-8"
                           title="Download file"
                           aria-label={`Descargar archivo ${file.name}`}
                         >
-                          <Download className="w-5 h-5" aria-hidden="true" />
+                          <Download className="w-4 h-4" aria-hidden="true" />
                         </button>
                       </td>
                     </tr>
