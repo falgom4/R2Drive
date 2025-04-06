@@ -182,62 +182,69 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
   };
 
   return (
-    <div className="cf-card">
+    <div className="app-card">
       {/* Header del explorador */}
-      <div className="p-5 border-b border-solid border-[var(--cf-border)] flex items-center justify-between bg-[var(--cf-bg-dark)]">
+      <div className="p-5 border-b border-solid border-[var(--app-border)] flex items-center justify-between bg-[var(--app-bg-light)]">
         <div className="flex items-center gap-3">
-          <Cloud className="text-[var(--cf-orange)] w-6 h-6" />
-          <h2 className="text-xl font-semibold text-[var(--cf-text-primary)]">
+          <Cloud className="text-[var(--primary)] w-6 h-6" aria-hidden="true" />
+          <h2 className="text-xl font-semibold text-[var(--app-text-primary)]">
             R2Drive Explorer
           </h2>
-          {loading && <Loader2 className="w-5 h-5 animate-spin ml-3" />}
+          {loading && <Loader2 className="w-5 h-5 animate-spin ml-3" aria-hidden="true" />}
         </div>
         <div className="flex items-center gap-4">
           {selectedItems.size > 0 && (
             <button 
-              className="cf-button-secondary flex items-center gap-2 py-2 px-4 text-sm text-[var(--cf-orange)] hover:bg-[rgba(246,130,31,0.1)]"
+              className="app-button-danger flex items-center gap-2 py-2 px-4 text-sm"
               onClick={handleDeleteClick}
               title="Delete selected items"
+              aria-label={`Eliminar ${selectedItems.size} elementos seleccionados`}
             >
-              <Trash2 className="w-4 h-4" />
+              <Trash2 className="w-4 h-4" aria-hidden="true" />
               <span>Delete ({selectedItems.size})</span>
             </button>
           )}
           
           <button 
-            className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)] transition-colors flex items-center justify-center"
+            className="p-3 rounded-full hover:bg-[var(--app-surface-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-colors flex items-center justify-center"
             onClick={refreshContents}
             title="Refresh"
+            aria-label="Actualizar contenido"
           >
-            <RefreshCw className="w-5 h-5" />
+            <RefreshCw className="w-5 h-5" aria-hidden="true" />
           </button>
           
           <button 
-            className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)] transition-colors flex items-center justify-center"
+            className="p-3 rounded-full hover:bg-[var(--app-surface-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-colors flex items-center justify-center"
             onClick={navigateToRoot}
             title="Go to root"
+            aria-label="Ir a la carpeta raíz"
           >
-            <Home className="w-5 h-5" />
+            <Home className="w-5 h-5" aria-hidden="true" />
           </button>
           
-          <div className="flex border border-[var(--cf-border)] rounded-md overflow-hidden ml-2">
+          <div className="flex border border-[var(--app-border)] rounded-md overflow-hidden ml-2" role="group" aria-label="Cambiar vista">
             <button 
-              className={`p-3 ${viewMode === 'list' ? 'bg-[var(--cf-surface-hover)]' : 'bg-transparent'} transition-colors`}
+              className={`p-3 ${viewMode === 'list' ? 'bg-[var(--app-surface-hover)]' : 'bg-transparent'} transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary)]`}
               onClick={() => setViewMode('list')}
               title="List view"
+              aria-label="Vista de lista"
+              aria-pressed={viewMode === 'list'}
             >
-              <i className="flex flex-col gap-1">
+              <i className="flex flex-col gap-1" aria-hidden="true">
                 <span className="h-[2px] w-5 bg-current rounded-full"></span>
                 <span className="h-[2px] w-5 bg-current rounded-full"></span>
                 <span className="h-[2px] w-5 bg-current rounded-full"></span>
               </i>
             </button>
             <button 
-              className={`p-3 ${viewMode === 'grid' ? 'bg-[var(--cf-surface-hover)]' : 'bg-transparent'} transition-colors`}
+              className={`p-3 ${viewMode === 'grid' ? 'bg-[var(--app-surface-hover)]' : 'bg-transparent'} transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary)]`}
               onClick={() => setViewMode('grid')}
               title="Grid view"
+              aria-label="Vista de cuadrícula"
+              aria-pressed={viewMode === 'grid'}
             >
-              <i className="grid grid-cols-2 gap-1">
+              <i className="grid grid-cols-2 gap-1" aria-hidden="true">
                 <span className="h-[7px] w-[7px] bg-current rounded-sm"></span>
                 <span className="h-[7px] w-[7px] bg-current rounded-sm"></span>
                 <span className="h-[7px] w-[7px] bg-current rounded-sm"></span>
@@ -249,26 +256,28 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
       </div>
       
       {/* Barra de navegación */}
-      <div className="cf-navigation px-5 py-4 bg-[var(--cf-surface)] border-b border-solid border-[var(--cf-border)]">
-        <div className="cf-navigation-path">
+      <div className="app-navigation px-5 py-4 bg-[var(--app-surface)] border-b border-solid border-[var(--app-border)]">
+        <div className="app-navigation-path">
           {currentPrefix ? (
             <>
               <button
                 onClick={navigateToRoot}
-                className="flex items-center gap-2 bg-[var(--cf-bg-dark)] rounded-lg py-2 px-3 hover:bg-[var(--cf-surface-hover)] transition-colors"
+                className="flex items-center gap-2 bg-[var(--app-bg-light)] rounded-lg py-2 px-3 hover:bg-[var(--app-surface-hover)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                aria-label="Navegar a la raíz"
               >
-                <Home className="w-4 h-4 text-[var(--cf-orange)]" />
+                <Home className="w-4 h-4 text-[var(--primary)]" aria-hidden="true" />
                 <span>Root</span>
               </button>
               
               {currentPrefix.split('/').filter(Boolean).map((segment, index, array) => (
                 <div key={index} className="flex items-center">
-                  <span className="mx-2 text-[var(--cf-text-disabled)]">/</span>
+                  <span className="mx-2 text-[var(--app-text-disabled)]" aria-hidden="true">/</span>
                   <button
                     onClick={() => navigateToFolder(
                       array.slice(0, index + 1).join('/') + '/'
                     )}
-                    className="py-2 px-3 rounded-lg hover:bg-[var(--cf-surface-hover)] transition-colors"
+                    className="py-2 px-3 rounded-lg hover:bg-[var(--app-surface-hover)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                    aria-label={`Navegar a la carpeta ${segment}`}
                   >
                     {segment}
                   </button>
@@ -276,9 +285,9 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
               ))}
             </>
           ) : (
-            <button className="flex items-center gap-2 bg-[var(--cf-bg-dark)] rounded-lg py-2 px-3">
-              <Home className="w-4 h-4 text-[var(--cf-orange)]" />
-              <span className="text-[var(--cf-orange)] font-medium">Root</span>
+            <button className="flex items-center gap-2 bg-[var(--app-bg-light)] rounded-lg py-2 px-3" aria-current="location">
+              <Home className="w-4 h-4 text-[var(--primary)]" aria-hidden="true" />
+              <span className="text-[var(--primary)] font-medium">Root</span>
             </button>
           )}
         </div>
@@ -286,11 +295,12 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
         <div className="ml-auto">
           {currentPrefix && (
             <button 
-              className="cf-button-secondary flex items-center gap-2 py-2 px-4 text-sm"
+              className="app-button-secondary flex items-center gap-2 py-2 px-4 text-sm"
               onClick={navigateToParent}
               title="Go back to parent folder"
+              aria-label="Volver a la carpeta superior"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4" aria-hidden="true" />
               <span>Back</span>
             </button>
           )}
@@ -298,7 +308,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
       </div>
       
       {error && (
-        <div className="cf-alert cf-alert-error mx-5 my-4">
+        <div role="alert" className="mx-5 my-4 p-4 bg-[rgba(239,68,68,0.1)] border border-[rgba(239,68,68,0.3)] text-[var(--error)] rounded-md">
           {error}
         </div>
       )}
@@ -306,8 +316,8 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
       {loading && !bucketContents ? (
         <div className="p-16 flex justify-center">
           <div className="text-center">
-            <Loader2 className="w-14 h-14 animate-spin text-[var(--cf-orange)] mx-auto mb-6" />
-            <p className="text-lg text-[var(--cf-text-secondary)]">Loading content...</p>
+            <Loader2 className="w-14 h-14 animate-spin text-[var(--primary)] mx-auto mb-6" aria-hidden="true" />
+            <p className="text-lg text-[var(--app-text-secondary)]" aria-live="polite">Loading content...</p>
           </div>
         </div>
       ) : (
@@ -315,44 +325,55 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
           {/* Vista de lista */}
           {viewMode === 'list' && (
             <div className="overflow-x-auto">
-              <table className="cf-table">
-                <thead className="cf-table-header">
+              <table className="app-table" role="grid" aria-label="Contenido del bucket">
+                <thead className="app-table-header">
                   <tr>
-                    <th style={{ width: '50px' }}></th>
-                    <th>Name</th>
-                    <th>Size</th>
-                    <th>Modified</th>
-                    <th style={{ width: '70px' }}></th>
+                    <th style={{ width: '50px' }} scope="col"></th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Size</th>
+                    <th scope="col">Modified</th>
+                    <th style={{ width: '70px' }} scope="col"></th>
                   </tr>
                 </thead>
-                <tbody className="cf-table-body">
+                <tbody className="app-table-body">
                   {/* Carpetas */}
                   {bucketContents?.folders && bucketContents.folders.map((folder) => (
                     <tr 
                       key={folder.prefix}
-                      className={selectedItems.has(folder.prefix) ? 'bg-[rgba(246,130,31,0.05)]' : ''}
+                      className={selectedItems.has(folder.prefix) ? 'bg-[rgba(37,99,235,0.05)]' : ''}
                     >
                       <td>
                         <button
                           className={`p-3 rounded-full ${
                             selectedItems.has(folder.prefix) 
-                              ? 'text-[var(--cf-orange)]' 
-                              : 'text-[var(--cf-text-secondary)]'
-                          }`}
+                              ? 'text-[var(--primary)]' 
+                              : 'text-[var(--app-text-secondary)]'
+                          } focus:outline-none focus:ring-2 focus:ring-[var(--primary)]`}
                           onClick={(e) => toggleItemSelection(folder.prefix, e)}
+                          aria-label={selectedItems.has(folder.prefix) ? 'Deseleccionar carpeta' : 'Seleccionar carpeta'}
+                          aria-pressed={selectedItems.has(folder.prefix)}
                         >
                           {selectedItems.has(folder.prefix) 
-                            ? <Check className="w-5 h-5" /> 
-                            : <MoreHorizontal className="w-5 h-5" />
+                            ? <Check className="w-5 h-5" aria-hidden="true" /> 
+                            : <MoreHorizontal className="w-5 h-5" aria-hidden="true" />
                           }
                         </button>
                       </td>
                       <td>
                         <div 
-                          className="cf-table-file-name cursor-pointer"
+                          className="app-table-file-name cursor-pointer"
                           onClick={() => navigateToFolder(folder.prefix)}
+                          role="button"
+                          tabIndex={0}
+                          aria-label={`Abrir carpeta ${folder.name}`}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              navigateToFolder(folder.prefix);
+                            }
+                          }}
                         >
-                          <FolderOpen className="w-6 h-6 text-[var(--cf-orange)] cf-file-icon" />
+                          <FolderOpen className="w-6 h-6 text-[var(--primary)] app-file-icon" aria-hidden="true" />
                           <span>{folder.name}/</span>
                         </div>
                       </td>
@@ -360,11 +381,12 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <td>-</td>
                       <td>
                         <button 
-                          className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)]"
+                          className="p-3 rounded-full hover:bg-[var(--app-surface-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                           onClick={() => navigateToFolder(folder.prefix)}
                           title="Open folder"
+                          aria-label={`Abrir carpeta ${folder.name}`}
                         >
-                          <ChevronLeft className="w-5 h-5 rotate-180" />
+                          <ChevronLeft className="w-5 h-5 rotate-180" aria-hidden="true" />
                         </button>
                       </td>
                     </tr>
@@ -374,26 +396,28 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                   {bucketContents?.files && bucketContents.files.map((file) => (
                     <tr 
                       key={file.key}
-                      className={selectedItems.has(file.key) ? 'bg-[rgba(246,130,31,0.05)]' : ''}
+                      className={selectedItems.has(file.key) ? 'bg-[rgba(37,99,235,0.05)]' : ''}
                     >
                       <td>
                         <button
                           className={`p-3 rounded-full ${
                             selectedItems.has(file.key) 
-                              ? 'text-[var(--cf-orange)]' 
-                              : 'text-[var(--cf-text-secondary)]'
-                          }`}
+                              ? 'text-[var(--primary)]' 
+                              : 'text-[var(--app-text-secondary)]'
+                          } focus:outline-none focus:ring-2 focus:ring-[var(--primary)]`}
                           onClick={(e) => toggleItemSelection(file.key, e)}
+                          aria-label={selectedItems.has(file.key) ? 'Deseleccionar archivo' : 'Seleccionar archivo'}
+                          aria-pressed={selectedItems.has(file.key)}
                         >
                           {selectedItems.has(file.key) 
-                            ? <Check className="w-5 h-5" /> 
-                            : <MoreHorizontal className="w-5 h-5" />
+                            ? <Check className="w-5 h-5" aria-hidden="true" /> 
+                            : <MoreHorizontal className="w-5 h-5" aria-hidden="true" />
                           }
                         </button>
                       </td>
                       <td>
-                        <div className="cf-table-file-name">
-                          <File className="w-6 h-6 text-[var(--cf-text-secondary)] cf-file-icon" />
+                        <div className="app-table-file-name">
+                          <File className="w-6 h-6 text-[var(--app-text-secondary)] app-file-icon" aria-hidden="true" />
                           <span>{file.name}</span>
                         </div>
                       </td>
@@ -401,10 +425,11 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <td>{formatDate(file.lastModified)}</td>
                       <td>
                         <button 
-                          className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)]"
+                          className="p-3 rounded-full hover:bg-[var(--app-surface-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
                           title="Download file"
+                          aria-label={`Descargar archivo ${file.name}`}
                         >
-                          <Download className="w-5 h-5" />
+                          <Download className="w-5 h-5" aria-hidden="true" />
                         </button>
                       </td>
                     </tr>
@@ -415,14 +440,15 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                    (!bucketContents?.files || bucketContents.files.length === 0) && (
                     <tr>
                       <td colSpan={5} className="text-center py-12">
-                        <div className="inline-block p-6 rounded-full bg-[var(--cf-surface-hover)] mb-6">
-                          <FolderOpen className="w-12 h-12 text-[var(--cf-text-secondary)]" />
+                        <div className="inline-block p-6 rounded-full bg-[var(--app-surface-hover)] mb-6">
+                          <FolderOpen className="w-12 h-12 text-[var(--app-text-secondary)]" aria-hidden="true" />
                         </div>
-                        <p className="text-lg text-[var(--cf-text-secondary)] mb-4">No files or folders in this location</p>
+                        <p className="text-lg text-[var(--app-text-secondary)] mb-4">No files or folders in this location</p>
                         {currentPrefix && (
                           <button 
-                            className="cf-button-primary mt-6"
+                            className="app-button-primary mt-6"
                             onClick={() => onSelectFolder && onSelectFolder(currentPrefix)}
+                            aria-label={`Usar esta carpeta para subidas (${currentPrefix})`}
                           >
                             Use this folder for uploads
                           </button>
@@ -438,33 +464,45 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
           {/* Vista de cuadrícula */}
           {viewMode === 'grid' && (
             <div className="p-5">
-              <div className="cf-grid">
+              <div className="app-grid" role="grid" aria-label="Contenido del bucket">
                 {/* Carpetas */}
                 {bucketContents?.folders && bucketContents.folders.map((folder) => (
                   <div 
                     key={folder.prefix}
-                    className={`cf-grid-item ${selectedItems.has(folder.prefix) ? 'ring-2 ring-[var(--cf-orange)]' : ''}`}
+                    className={`app-grid-item ${selectedItems.has(folder.prefix) ? 'ring-2 ring-[var(--primary)]' : ''}`}
+                    role="gridcell"
                   >
                     <div 
                       className="p-4 flex flex-col items-center"
                       onClick={() => navigateToFolder(folder.prefix)}
+                      role="button"
+                      tabIndex={0}
+                      aria-label={`Abrir carpeta ${folder.name}`}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          navigateToFolder(folder.prefix);
+                        }
+                      }}
                     >
                       <div className="relative">
-                        <FolderOpen className="w-20 h-20 text-[var(--cf-orange)]" />
+                        <FolderOpen className="w-20 h-20 text-[var(--primary)]" aria-hidden="true" />
                         <button
                           className={`absolute -top-2 -right-2 p-2 rounded-full shadow-sm ${
                             selectedItems.has(folder.prefix) 
-                              ? 'bg-[var(--cf-orange)] text-white' 
-                              : 'bg-[var(--cf-bg-dark)] text-[var(--cf-text-secondary)] border border-[var(--cf-border)]'
-                          } transition-transform hover:scale-110`}
+                              ? 'bg-[var(--primary)] text-white' 
+                              : 'bg-[var(--app-bg-light)] text-[var(--app-text-secondary)] border border-[var(--app-border)]'
+                          } transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]`}
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleItemSelection(folder.prefix, e);
                           }}
+                          aria-label={selectedItems.has(folder.prefix) ? 'Deseleccionar carpeta' : 'Seleccionar carpeta'}
+                          aria-pressed={selectedItems.has(folder.prefix)}
                         >
                           {selectedItems.has(folder.prefix) 
-                            ? <Check className="w-4 h-4" /> 
-                            : <MoreHorizontal className="w-4 h-4" />
+                            ? <Check className="w-4 h-4" aria-hidden="true" /> 
+                            : <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
                           }
                         </button>
                       </div>
@@ -479,27 +517,30 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                 {bucketContents?.files && bucketContents.files.map((file) => (
                   <div 
                     key={file.key}
-                    className={`cf-grid-item ${selectedItems.has(file.key) ? 'ring-2 ring-[var(--cf-orange)]' : ''}`}
+                    className={`app-grid-item ${selectedItems.has(file.key) ? 'ring-2 ring-[var(--primary)]' : ''}`}
+                    role="gridcell"
                   >
                     <div className="p-4 flex flex-col items-center">
                       <div className="relative">
-                        <File className="w-20 h-20 text-[var(--cf-text-secondary)]" />
+                        <File className="w-20 h-20 text-[var(--app-text-secondary)]" aria-hidden="true" />
                         <button
                           className={`absolute -top-2 -right-2 p-2 rounded-full shadow-sm ${
                             selectedItems.has(file.key) 
-                              ? 'bg-[var(--cf-orange)] text-white' 
-                              : 'bg-[var(--cf-bg-dark)] text-[var(--cf-text-secondary)] border border-[var(--cf-border)]'
-                          } transition-transform hover:scale-110`}
+                              ? 'bg-[var(--primary)] text-white' 
+                              : 'bg-[var(--app-bg-light)] text-[var(--app-text-secondary)] border border-[var(--app-border)]'
+                          } transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]`}
                           onClick={(e) => toggleItemSelection(file.key, e)}
+                          aria-label={selectedItems.has(file.key) ? 'Deseleccionar archivo' : 'Seleccionar archivo'}
+                          aria-pressed={selectedItems.has(file.key)}
                         >
                           {selectedItems.has(file.key) 
-                            ? <Check className="w-4 h-4" /> 
-                            : <MoreHorizontal className="w-4 h-4" />
+                            ? <Check className="w-4 h-4" aria-hidden="true" /> 
+                            : <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
                           }
                         </button>
                       </div>
                       <span className="mt-4 text-center truncate w-full">{file.name}</span>
-                      <span className="text-xs text-[var(--cf-text-secondary)] mt-2">{formatFileSize(file.size)}</span>
+                      <span className="text-xs text-[var(--app-text-secondary)] mt-2">{formatFileSize(file.size)}</span>
                     </div>
                   </div>
                 ))}
@@ -508,14 +549,15 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                 {(!bucketContents?.folders || bucketContents.folders.length === 0) && 
                  (!bucketContents?.files || bucketContents.files.length === 0) && (
                   <div className="col-span-full p-16 text-center">
-                    <div className="inline-block p-6 rounded-full bg-[var(--cf-surface-hover)] mb-6">
-                      <FolderOpen className="w-14 h-14 text-[var(--cf-text-secondary)]" />
+                    <div className="inline-block p-6 rounded-full bg-[var(--app-surface-hover)] mb-6">
+                      <FolderOpen className="w-14 h-14 text-[var(--app-text-secondary)]" aria-hidden="true" />
                     </div>
-                    <p className="text-lg text-[var(--cf-text-secondary)] mb-4">No files or folders in this location</p>
+                    <p className="text-lg text-[var(--app-text-secondary)] mb-4">No files or folders in this location</p>
                     {currentPrefix && (
                       <button 
-                        className="cf-button-primary mt-6"
+                        className="app-button-primary mt-6"
                         onClick={() => onSelectFolder && onSelectFolder(currentPrefix)}
+                        aria-label={`Usar esta carpeta para subidas (${currentPrefix})`}
                       >
                         Use this folder for uploads
                       </button>
@@ -538,28 +580,30 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
           <Dialog.Content 
-            className="fixed p-0 rounded-xl shadow-2xl w-full max-w-md cf-card" 
+            className="fixed p-0 rounded-xl shadow-2xl w-full max-w-md app-card" 
             style={{
               left: '50%',
               top: '50%',
               transform: 'translate(-50%, -50%)'
             }}
+            aria-labelledby="delete-dialog-title"
+            aria-describedby="delete-dialog-description"
           >
-            <div className="px-6 py-5 border-b border-[var(--cf-border)] bg-[rgba(246,130,31,0.1)]">
-              <Dialog.Title className="text-lg font-semibold text-[var(--cf-orange)] flex items-center gap-3">
-                <Trash2 className="w-5 h-5" />
+            <div className="px-6 py-5 border-b border-[var(--app-border)] bg-[rgba(239,68,68,0.1)]">
+              <Dialog.Title id="delete-dialog-title" className="text-lg font-semibold text-[var(--error)] flex items-center gap-3">
+                <Trash2 className="w-5 h-5" aria-hidden="true" />
                 Confirm Deletion
               </Dialog.Title>
             </div>
             <div className="p-8">
-              <Dialog.Description className="text-[var(--cf-text-primary)] mb-8">
+              <Dialog.Description id="delete-dialog-description" className="text-[var(--app-text-primary)] mb-8">
                 Are you sure you want to delete {confirmDelete.items.length} item(s)? This action cannot be undone.
                 
-                <div className="mt-6 bg-[var(--cf-surface)] rounded-lg p-5 max-h-48 overflow-y-auto">
+                <div className="mt-6 bg-[var(--app-surface)] rounded-lg p-5 max-h-48 overflow-y-auto">
                   <ul className="list-disc pl-6 space-y-2">
                     {confirmDelete.items.map((item, index) => (
                       <li key={index} className="text-sm">
-                        <span className={item.isFolder ? 'text-[var(--cf-orange)]' : 'text-[var(--cf-text-primary)]'}>
+                        <span className={item.isFolder ? 'text-[var(--primary)]' : 'text-[var(--app-text-primary)]'}>
                           {item.name}{item.isFolder ? '/' : ''}
                         </span>
                       </li>
@@ -569,26 +613,28 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
               </Dialog.Description>
               <div className="flex justify-end gap-4">
                 <button
-                  className="cf-button-secondary flex items-center gap-3"
+                  className="app-button-secondary flex items-center gap-3"
                   onClick={() => setConfirmDelete({ isOpen: false, items: [] })}
                   disabled={isDeleting}
+                  aria-label="Cancelar eliminación"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-5 h-5" aria-hidden="true" />
                   <span>Cancel</span>
                 </button>
                 <button
-                  className="cf-button-primary flex items-center gap-3"
+                  className="app-button-danger flex items-center gap-3"
                   onClick={deleteSelectedItems}
                   disabled={isDeleting}
+                  aria-label={`Confirmar eliminación de ${confirmDelete.items.length} elementos`}
                 >
                   {isDeleting ? (
                     <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
                       <span>Deleting...</span>
                     </>
                   ) : (
                     <>
-                      <Trash2 className="w-5 h-5" />
+                      <Trash2 className="w-5 h-5" aria-hidden="true" />
                       <span>Delete</span>
                     </>
                   )}
