@@ -188,7 +188,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
         <div className="flex items-center gap-3">
           <Cloud className="text-[var(--mega-primary)] w-6 h-6" />
           <h2 className="text-xl font-semibold text-[var(--mega-text-primary)]">
-            Explorador R2
+            R2Drive Explorer
           </h2>
           {loading && <Loader2 className="w-5 h-5 animate-spin ml-3" />}
         </div>

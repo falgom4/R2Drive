@@ -139,7 +139,7 @@ export default function Home() {
         <div className="mega-container flex justify-between items-center">
           <div className="mega-logo">
             <Cloud className="mega-logo-icon w-6 h-6" />
-            <span>Cloudflare R2</span>
+            <span>R2Drive</span>
           </div>
           <div className="flex gap-6">
             <button className="p-3 rounded-full hover:bg-[var(--mega-surface-hover)]">
@@ -156,7 +156,7 @@ export default function Home() {
               <Shield className="w-14 h-14 text-[var(--mega-primary)]" />
             </div>
             <h1 className="text-4xl font-bold mb-4">
-              Almacenamiento R2 Seguro
+              R2Drive
             </h1>
             <p className="text-[var(--mega-text-secondary)] max-w-lg mx-auto px-4">
               Arrastra y suelta archivos o carpetas para subirlos a Cloudflare R2. Rápido, seguro y sencillo.

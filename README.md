@@ -1,6 +1,6 @@
-# R2DToo - Gestor de Archivos para Cloudflare R2
+# R2Drive - Gestor de Archivos para Cloudflare R2
 
-R2DToo es una aplicación web moderna que permite gestionar archivos en Cloudflare R2 de manera fácil e intuitiva. Con una interfaz inspirada en MEGA, ofrece funcionalidades como:
+R2Drive es una aplicación web moderna que permite gestionar archivos en Cloudflare R2 de manera fácil e intuitiva. Con una interfaz inspirada en MEGA, ofrece funcionalidades como:
 
 - 📂 Exploración completa del bucket con vista de lista o cuadrícula
 - 📤 Subida de archivos individuales o carpetas completas mediante drag & drop
@@ -8,7 +8,7 @@ R2DToo es una aplicación web moderna que permite gestionar archivos en Cloudfla
 - 🗑️ Eliminación de archivos y carpetas
 - 🔄 Actualización en tiempo real del contenido
 
-![R2DToo Screenshot](https://ejemplo.com/screenshot.png)
+![R2Drive Screenshot](https://ejemplo.com/screenshot.png)
 
 ## Requisitos
 
@@ -20,8 +20,8 @@ R2DToo es una aplicación web moderna que permite gestionar archivos en Cloudfla
 
 1. Clona este repositorio:
    ```bash
-   git clone https://github.com/falgom4/R2DToo.git
-   cd R2DToo
+   git clone https://github.com/falgom4/R2Drive.git
+   cd R2Drive
    ```
 
 2. Instala las dependencias:
@@ -47,7 +47,7 @@ R2DToo es una aplicación web moderna que permite gestionar archivos en Cloudfla
 
 ## Configuración de Credenciales de Cloudflare R2
 
-Para configurar correctamente R2DToo con tu cuenta de Cloudflare R2, sigue estos pasos:
+Para configurar correctamente R2Drive con tu cuenta de Cloudflare R2, sigue estos pasos:
 
 ### 1. Obtener las Credenciales de R2
 
@@ -57,7 +57,7 @@ Para configurar correctamente R2DToo con tu cuenta de Cloudflare R2, sigue estos
 4. Si aún no tienes un bucket, crea uno con el botón **Create bucket**
 5. Para obtener las credenciales, ve a la pestaña **Administrar R2 API Tokens**
 6. Haz clic en **Crear nuevo token** y selecciona **Token de clave de API de R2**
-7. Asigna un nombre al token (por ejemplo, "R2DToo Access")
+7. Asigna un nombre al token (por ejemplo, "R2Drive Access")
 8. Selecciona los permisos necesarios (recomendado: lectura y escritura)
 9. Haz clic en **Crear token de API**
 10. Guarda el **Access Key ID** y **Secret Access Key** mostrados (esta será la única vez que puedas ver la Secret Key)
