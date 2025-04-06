@@ -42,3 +42,6 @@ next-env.d.ts
 *.njsproj
 *.sln
 *.sw?
+
+# Carpeta subir-r2 (repositorio git dentro del proyecto)
+/subir-r2/
