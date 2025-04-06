@@ -231,11 +231,11 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
               aria-label="Vista de lista"
               aria-pressed={viewMode === 'list'}
             >
-              <i className="flex flex-col gap-1 items-center justify-center" aria-hidden="true">
-                <span className="h-[2px] w-5 bg-current rounded-full"></span>
-                <span className="h-[2px] w-5 bg-current rounded-full"></span>
-                <span className="h-[2px] w-5 bg-current rounded-full"></span>
-              </i>
+              <div className="flex flex-col gap-[3px] items-center justify-center w-full" aria-hidden="true">
+                <div className="h-[2px] w-5 bg-current rounded-full"></div>
+                <div className="h-[2px] w-5 bg-current rounded-full"></div>
+                <div className="h-[2px] w-5 bg-current rounded-full"></div>
+              </div>
             </button>
             <button 
               className={`navigation-button p-2 w-10 h-10 ${viewMode === 'grid' ? 'bg-[var(--app-surface-hover)] border-[var(--primary)]' : ''}`}
@@ -244,12 +244,12 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
               aria-label="Vista de cuadrícula"
               aria-pressed={viewMode === 'grid'}
             >
-              <i className="grid grid-cols-2 gap-1 items-center justify-center" aria-hidden="true">
-                <span className="h-[6px] w-[6px] bg-current rounded-sm"></span>
-                <span className="h-[6px] w-[6px] bg-current rounded-sm"></span>
-                <span className="h-[6px] w-[6px] bg-current rounded-sm"></span>
-                <span className="h-[6px] w-[6px] bg-current rounded-sm"></span>
-              </i>
+              <div className="grid grid-cols-2 gap-[3px] items-center justify-center w-full" aria-hidden="true">
+                <div className="h-[7px] w-[7px] bg-current rounded-[1px]"></div>
+                <div className="h-[7px] w-[7px] bg-current rounded-[1px]"></div>
+                <div className="h-[7px] w-[7px] bg-current rounded-[1px]"></div>
+                <div className="h-[7px] w-[7px] bg-current rounded-[1px]"></div>
+              </div>
             </button>
           </div>
         </div>
