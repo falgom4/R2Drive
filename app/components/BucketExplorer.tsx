@@ -255,9 +255,9 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
             <>
               <button
                 onClick={navigateToRoot}
-                className="flex items-center gap-2"
+                className="flex items-center gap-2 bg-[var(--cf-bg-dark)] rounded-lg py-2 px-3 hover:bg-[var(--cf-surface-hover)] transition-colors"
               >
-                <Home className="w-4 h-4" />
+                <Home className="w-4 h-4 text-[var(--cf-orange)]" />
                 <span>Root</span>
               </button>
               
@@ -268,6 +268,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                     onClick={() => navigateToFolder(
                       array.slice(0, index + 1).join('/') + '/'
                     )}
+                    className="py-2 px-3 rounded-lg hover:bg-[var(--cf-surface-hover)] transition-colors"
                   >
                     {segment}
                   </button>
@@ -275,9 +276,9 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
               ))}
             </>
           ) : (
-            <button className="flex items-center gap-2 text-[var(--cf-orange)]">
-              <Home className="w-4 h-4" />
-              <span>Root</span>
+            <button className="flex items-center gap-2 bg-[var(--cf-bg-dark)] rounded-lg py-2 px-3">
+              <Home className="w-4 h-4 text-[var(--cf-orange)]" />
+              <span className="text-[var(--cf-orange)] font-medium">Root</span>
             </button>
           )}
         </div>
@@ -451,10 +452,10 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <div className="relative">
                         <FolderOpen className="w-20 h-20 text-[var(--cf-orange)]" />
                         <button
-                          className={`absolute -top-2 -right-2 p-2 rounded-full ${
+                          className={`absolute -top-2 -right-2 p-2 rounded-md shadow-md ${
                             selectedItems.has(folder.prefix) 
                               ? 'bg-[var(--cf-orange)] text-white' 
-                              : 'bg-[var(--cf-surface-hover)] text-[var(--cf-text-secondary)]'
+                              : 'bg-[var(--cf-bg-dark)] text-[var(--cf-text-secondary)] border border-[var(--cf-border)]'
                           }`}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -484,10 +485,10 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <div className="relative">
                         <File className="w-20 h-20 text-[var(--cf-text-secondary)]" />
                         <button
-                          className={`absolute -top-2 -right-2 p-2 rounded-full ${
+                          className={`absolute -top-2 -right-2 p-2 rounded-md shadow-md ${
                             selectedItems.has(file.key) 
                               ? 'bg-[var(--cf-orange)] text-white' 
-                              : 'bg-[var(--cf-surface-hover)] text-[var(--cf-text-secondary)]'
+                              : 'bg-[var(--cf-bg-dark)] text-[var(--cf-text-secondary)] border border-[var(--cf-border)]'
                           }`}
                           onClick={(e) => toggleItemSelection(file.key, e)}
                         >
