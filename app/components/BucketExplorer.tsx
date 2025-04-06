@@ -206,7 +206,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
           )}
           
           <button 
-            className="p-3 rounded-full hover:bg-[var(--app-surface-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-colors flex items-center justify-center"
+            className="navigation-button p-3 rounded-full"
             onClick={refreshContents}
             title="Refresh"
             aria-label="Actualizar contenido"
@@ -214,13 +214,13 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
             <RefreshCw className="w-5 h-5" aria-hidden="true" />
           </button>
           
-          <button 
-            className="p-3 rounded-full hover:bg-[var(--app-surface-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] transition-colors flex items-center justify-center"
+          <button
             onClick={navigateToRoot}
-            title="Go to root"
-            aria-label="Ir a la carpeta raíz"
+            className="navigation-button flex items-center gap-2 py-2 px-3"
+            aria-label="Navegar a la raíz"
           >
-            <Home className="w-5 h-5" aria-hidden="true" />
+            <Home className="w-4 h-4 text-[var(--primary)]" aria-hidden="true" />
+            <span>Root</span>
           </button>
           
           <div className="flex border border-[var(--app-border)] rounded-md overflow-hidden ml-2" role="group" aria-label="Cambiar vista">
@@ -262,7 +262,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
             <>
               <button
                 onClick={navigateToRoot}
-                className="flex items-center gap-2 bg-[var(--app-bg-light)] rounded-lg py-2 px-3 hover:bg-[var(--app-surface-hover)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                className="navigation-button flex items-center gap-2 py-2 px-3"
                 aria-label="Navegar a la raíz"
               >
                 <Home className="w-4 h-4 text-[var(--primary)]" aria-hidden="true" />
@@ -276,7 +276,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                     onClick={() => navigateToFolder(
                       array.slice(0, index + 1).join('/') + '/'
                     )}
-                    className="py-2 px-3 rounded-lg hover:bg-[var(--app-surface-hover)] transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                    className="navigation-button py-2 px-3"
                     aria-label={`Navegar a la carpeta ${segment}`}
                   >
                     {segment}
@@ -285,7 +285,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
               ))}
             </>
           ) : (
-            <button className="flex items-center gap-2 bg-[var(--app-bg-light)] rounded-lg py-2 px-3" aria-current="location">
+            <button className="navigation-button flex items-center gap-2 py-2 px-3" aria-current="location">
               <Home className="w-4 h-4 text-[var(--primary)]" aria-hidden="true" />
               <span className="text-[var(--primary)] font-medium">Root</span>
             </button>
@@ -295,7 +295,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
         <div className="ml-auto">
           {currentPrefix && (
             <button 
-              className="app-button-secondary flex items-center gap-2 py-2 px-4 text-sm"
+              className="navigation-button flex items-center gap-2 py-2 px-4 text-sm"
               onClick={navigateToParent}
               title="Go back to parent folder"
               aria-label="Volver a la carpeta superior"
@@ -344,7 +344,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                     >
                       <td>
                         <button
-                          className={`p-3 rounded-full ${
+                          className={`user-avatar p-3 rounded-full ${
                             selectedItems.has(folder.prefix) 
                               ? 'text-[var(--primary)]' 
                               : 'text-[var(--app-text-secondary)]'
@@ -381,7 +381,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <td>-</td>
                       <td>
                         <button 
-                          className="p-3 rounded-full hover:bg-[var(--app-surface-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                          className="navigation-button p-2 rounded-full hover:bg-[var(--app-surface-hover)]"
                           onClick={() => navigateToFolder(folder.prefix)}
                           title="Open folder"
                           aria-label={`Abrir carpeta ${folder.name}`}
@@ -400,7 +400,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                     >
                       <td>
                         <button
-                          className={`p-3 rounded-full ${
+                          className={`user-avatar p-3 rounded-full ${
                             selectedItems.has(file.key) 
                               ? 'text-[var(--primary)]' 
                               : 'text-[var(--app-text-secondary)]'
@@ -425,7 +425,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <td>{formatDate(file.lastModified)}</td>
                       <td>
                         <button 
-                          className="p-3 rounded-full hover:bg-[var(--app-surface-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                          className="navigation-button p-2 rounded-full hover:bg-[var(--app-surface-hover)]"
                           title="Download file"
                           aria-label={`Descargar archivo ${file.name}`}
                         >
@@ -488,10 +488,10 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <div className="relative">
                         <FolderOpen className="w-20 h-20 text-[var(--primary)]" aria-hidden="true" />
                         <button
-                          className={`absolute -top-2 -right-2 p-2 rounded-full shadow-sm ${
+                          className={`absolute -top-2 -right-2 p-2 rounded-full shadow-sm user-avatar ${
                             selectedItems.has(folder.prefix) 
-                              ? 'bg-[var(--primary)] text-white' 
-                              : 'bg-[var(--app-bg-light)] text-[var(--app-text-secondary)] border border-[var(--app-border)]'
+                              ? 'text-white' 
+                              : 'text-[var(--app-text-secondary)]'
                           } transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]`}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -524,10 +524,10 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <div className="relative">
                         <File className="w-20 h-20 text-[var(--app-text-secondary)]" aria-hidden="true" />
                         <button
-                          className={`absolute -top-2 -right-2 p-2 rounded-full shadow-sm ${
+                          className={`absolute -top-2 -right-2 p-2 rounded-full shadow-sm user-avatar ${
                             selectedItems.has(file.key) 
-                              ? 'bg-[var(--primary)] text-white' 
-                              : 'bg-[var(--app-bg-light)] text-[var(--app-text-secondary)] border border-[var(--app-border)]'
+                              ? 'text-white' 
+                              : 'text-[var(--app-text-secondary)]'
                           } transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]`}
                           onClick={(e) => toggleItemSelection(file.key, e)}
                           aria-label={selectedItems.has(file.key) ? 'Deseleccionar archivo' : 'Seleccionar archivo'}

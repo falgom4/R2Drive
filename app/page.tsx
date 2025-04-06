@@ -1,11 +1,24 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
-import { Upload, Folder, Check, AlertCircle, Wifi, WifiOff, FileText, Cloud, Shield, Settings, XCircle, ArrowUp } from 'lucide-react';
+import { useState, useCallback, useEffect, useRef } from 'react';
+import { Upload, Folder, Check, AlertCircle, Wifi, WifiOff, FileText, Cloud, Shield, Settings, XCircle, ArrowUp, Loader2, Sun, Moon, LogOut, Database, RefreshCw } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import * as Progress from '@radix-ui/react-progress';
-import { uploadDirectory, verifyBucketConnection, UploadProgress, uploadFile, uploadFiles, FileWithPath } from './lib/upload';
+import { uploadDirectory, verifyBucketConnection, UploadProgress, uploadFile } from './lib/upload';
 import BucketExplorer from './components/BucketExplorer';
+
+interface FileWithPath {
+  file: File;
+  path: string;
+  relativePath: string;
+}
+
+// Interfaz para el progreso de carga
+interface CustomUploadProgress {
+  percent: number;
+  completed: number;
+  total: number;
+}
 
 export default function Home() {
   const [isDragging, setIsDragging] = useState(false);
@@ -15,12 +28,15 @@ export default function Home() {
   const [uploading, setUploading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [uploadProgress, setUploadProgress] = useState({
+  const [uploadProgress, setUploadProgress] = useState<CustomUploadProgress>({
     percent: 0,
     completed: 0,
     total: 0
   });
   const [uploadedFiles, setUploadedFiles] = useState<string[]>([]);
+  const [showSettingsMenu, setShowSettingsMenu] = useState(false);
+  const [theme, setTheme] = useState<'dark' | 'light'>('dark');
+  const settingsMenuRef = useRef<HTMLDivElement>(null);
 
   // Verificar la conexión al bucket al cargar
   useEffect(() => {
@@ -53,6 +69,110 @@ export default function Home() {
   const handleSelectFolder = useCallback((prefix: string) => {
     setCurrentUploadPath(prefix);
   }, []);
+
+  // Función para manejar la subida de archivos
+  const uploadFiles = async (
+    items: FileList | DataTransferItemList | FileWithPath[], 
+    prefix: string,
+    progressCallback: (progress: CustomUploadProgress) => void
+  ): Promise<string[]> => {
+    const uploadedFiles: string[] = [];
+    let totalFiles = 0;
+    let completedFiles = 0;
+    
+    // Función auxiliar para actualizar el progreso
+    const updateProgress = () => {
+      progressCallback({
+        percent: totalFiles ? Math.round((completedFiles / totalFiles) * 100) : 0,
+        completed: completedFiles,
+        total: totalFiles
+      });
+    };
+    
+    // Procesar la lista de elementos
+    if (items instanceof DataTransferItemList) {
+      // Es un drop de archivos/carpetas
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i].webkitGetAsEntry();
+        
+        if (!item) continue;
+        
+        if (item.isDirectory) {
+          // Subir directorio completo
+          const files = await uploadDirectory(
+            item as FileSystemDirectoryEntry,
+            prefix,
+            (progress: UploadProgress) => {
+              // Actualizar solo el progreso parcial
+              completedFiles = progress.uploadedFiles;
+              totalFiles = progress.totalFiles;
+              updateProgress();
+            }
+          );
+          uploadedFiles.push(...files);
+        } else if (item.isFile) {
+          // Subir archivo individual
+          const fileEntry = item as FileSystemFileEntry;
+          
+          const file: File = await new Promise((resolve, reject) => {
+            fileEntry.file(resolve, reject);
+          });
+          
+          totalFiles++;
+          updateProgress();
+          
+          const key = await uploadFile(
+            file, 
+            prefix,
+            (progressPercent: number) => {
+              // No actualizamos completedFiles hasta que termine
+              progressCallback({
+                ...uploadProgress,
+                percent: progressPercent
+              });
+            }
+          );
+          
+          completedFiles++;
+          updateProgress();
+          uploadedFiles.push(key);
+        }
+      }
+    } else if (items instanceof FileList || Array.isArray(items)) {
+      // Es una selección de archivos o un array de FileWithPath
+      const fileArray = Array.isArray(items) 
+        ? items 
+        : Array.from(items).map(file => ({
+            file,
+            path: file.name,
+            relativePath: file.name
+          }));
+      
+      totalFiles = fileArray.length;
+      updateProgress();
+      
+      for (const fileItem of fileArray) {
+        const file = 'file' in fileItem ? fileItem.file : fileItem;
+        
+        const key = await uploadFile(
+          file, 
+          prefix,
+          (progressPercent: number) => {
+            progressCallback({
+              ...uploadProgress,
+              percent: progressPercent
+            });
+          }
+        );
+        
+        completedFiles++;
+        updateProgress();
+        uploadedFiles.push(key);
+      }
+    }
+    
+    return uploadedFiles;
+  };
 
   // Manejar cuando se sueltan archivos
   const handleDrop = useCallback(
@@ -97,7 +217,7 @@ export default function Home() {
         setUploading(false);
       }
     },
-    [isBucketConnected, currentUploadPath]
+    [isBucketConnected, currentUploadPath, uploadProgress]
   );
 
   // Manejar cambio de archivos por input
@@ -146,8 +266,65 @@ export default function Home() {
         setUploading(false);
       }
     },
-    [isBucketConnected, currentUploadPath]
+    [isBucketConnected, currentUploadPath, uploadProgress]
   );
+
+  // Toggle theme between light and dark mode
+  const toggleTheme = useCallback(() => {
+    const newTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(newTheme);
+    
+    // Apply the class to the document body
+    if (newTheme === 'light') {
+      document.body.classList.add('light-mode');
+    } else {
+      document.body.classList.remove('light-mode');
+    }
+  }, [theme]);
+  
+  // Initialize theme
+  useEffect(() => {
+    // Check if user has a preference
+    const savedTheme = localStorage.getItem('r2drive-theme');
+    if (savedTheme === 'light') {
+      setTheme('light');
+      document.body.classList.add('light-mode');
+    }
+  }, []);
+  
+  // Save theme preference when it changes
+  useEffect(() => {
+    localStorage.setItem('r2drive-theme', theme);
+  }, [theme]);
+  
+  // Close settings menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (settingsMenuRef.current && !settingsMenuRef.current.contains(event.target as Node)) {
+        setShowSettingsMenu(false);
+      }
+    };
+    
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+  
+  // Force reconnect to bucket
+  const refreshConnection = useCallback(async () => {
+    setIsBucketConnected(null);
+    try {
+      const result = await verifyBucketConnection();
+      setIsBucketConnected(result);
+    } catch (err) {
+      setIsBucketConnected(false);
+      console.error('Error al verificar la conexión:', err);
+    }
+    
+    // Close settings menu
+    setShowSettingsMenu(false);
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -158,13 +335,70 @@ export default function Home() {
             <Cloud className="app-logo-icon w-6 h-6" aria-hidden="true" />
             <span>R2Drive</span>
           </div>
-          <div className="flex gap-6">
+          <div className="flex gap-6 relative" ref={settingsMenuRef}>
             <button 
-              className="p-3 rounded-full hover:bg-[var(--app-surface-hover)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+              className="settings-button p-2.5 rounded-full bg-[var(--app-bg-light)] border border-[var(--app-border)] hover:bg-[var(--app-surface-hover)] transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
               aria-label="Configuración"
+              aria-expanded={showSettingsMenu}
+              aria-haspopup="true"
+              onClick={() => setShowSettingsMenu(!showSettingsMenu)}
             >
-              <Settings className="w-5 h-5" aria-hidden="true" />
+              <Settings className="w-5 h-5 text-[var(--app-text-primary)]" aria-hidden="true" />
             </button>
+            
+            {/* Menú desplegable de configuración */}
+            {showSettingsMenu && (
+              <div 
+                className="absolute right-0 top-full mt-2 w-64 rounded-lg app-card p-2 shadow-lg z-50 border border-[var(--app-border)]"
+                style={{
+                  right: 0,
+                  maxWidth: 'calc(100vw - 32px)',
+                  transform: 'translateX(0)'
+                }}
+                role="menu"
+                aria-orientation="vertical"
+                aria-labelledby="settings-menu"
+              >
+                <div className="py-1.5 px-2 text-xs font-medium text-[var(--app-text-secondary)] border-b border-[var(--app-border)] mb-1">
+                  CONFIGURACIÓN
+                </div>
+                
+                <button 
+                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm rounded-md hover:bg-[var(--app-surface-hover)] text-[var(--app-text-primary)]"
+                  onClick={toggleTheme}
+                  role="menuitem"
+                >
+                  {theme === 'dark' 
+                    ? <Sun className="w-4 h-4 text-[var(--secondary)]" aria-hidden="true" /> 
+                    : <Moon className="w-4 h-4 text-[var(--secondary)]" aria-hidden="true" />
+                  }
+                  <span>{theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}</span>
+                </button>
+                
+                <button 
+                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm rounded-md hover:bg-[var(--app-surface-hover)] text-[var(--app-text-primary)]"
+                  onClick={refreshConnection}
+                  role="menuitem"
+                >
+                  <RefreshCw className="w-4 h-4 text-[var(--primary)]" aria-hidden="true" />
+                  <span>Actualizar conexión</span>
+                </button>
+                
+                <div className="border-t border-[var(--app-border)] my-1"></div>
+                
+                <button 
+                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm rounded-md hover:bg-[rgba(239,68,68,0.1)] text-[var(--error)]"
+                  onClick={() => {
+                    setShowSettingsMenu(false);
+                    setError('Esta función no está implementada todavía');
+                  }}
+                  role="menuitem"
+                >
+                  <LogOut className="w-4 h-4" aria-hidden="true" />
+                  <span>Cerrar sesión</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -246,7 +480,7 @@ export default function Home() {
             <div className="flex flex-col items-center gap-6">
               {!uploading && !success && (
                 <>
-                  <div className="w-20 h-20 rounded-full bg-[var(--app-surface-hover)] flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full user-avatar flex items-center justify-center">
                     <ArrowUp className="w-10 h-10 text-[var(--app-text-secondary)]" aria-hidden="true" />
                   </div>
                   
@@ -272,7 +506,7 @@ export default function Home() {
               
               {uploading && (
                 <div className="flex flex-col items-center gap-6 w-full max-w-md">
-                  <div className="w-20 h-20 rounded-full bg-[rgba(37,99,235,0.1)] flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full user-avatar flex items-center justify-center bg-[rgba(37,99,235,0.1)]">
                     <Loader2 className="w-12 h-12 text-[var(--primary)] animate-spin" aria-hidden="true" />
                   </div>
                   
@@ -300,7 +534,7 @@ export default function Home() {
               
               {success && !uploading && (
                 <div className="flex flex-col items-center gap-6 py-4">
-                  <div className="w-20 h-20 rounded-full bg-[rgba(16,185,129,0.1)] flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full user-avatar flex items-center justify-center bg-[rgba(16,185,129,0.1)]">
                     <Check className="w-12 h-12 text-[var(--success)]" aria-hidden="true" />
                   </div>
                   
@@ -334,7 +568,7 @@ export default function Home() {
               
               {error && (
                 <div className="flex flex-col items-center gap-6 py-4">
-                  <div className="w-20 h-20 rounded-full bg-[rgba(239,68,68,0.1)] flex items-center justify-center">
+                  <div className="w-20 h-20 rounded-full user-avatar flex items-center justify-center bg-[rgba(239,68,68,0.1)]">
                     <XCircle className="w-12 h-12 text-[var(--error)]" aria-hidden="true" />
                   </div>
                   
@@ -372,27 +606,30 @@ export default function Home() {
           <Dialog.Portal>
             <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
             <Dialog.Content 
-              className="fixed p-0 rounded-xl shadow-2xl w-full max-w-md cf-card" 
+              className="fixed p-0 rounded-xl shadow-2xl w-full max-w-md app-card" 
               style={{
                 left: '50%',
                 top: '50%',
                 transform: 'translate(-50%, -50%)'
               }}
+              aria-labelledby="error-dialog-title"
+              aria-describedby="error-dialog-description"
             >
-              <div className="px-6 py-5 border-b border-[var(--cf-border)] bg-[rgba(246,130,31,0.1)]">
-                <Dialog.Title className="text-lg font-semibold text-[var(--cf-orange)] flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5" />
+              <div className="px-6 py-5 border-b border-[var(--app-border)] bg-[rgba(239,68,68,0.1)]">
+                <Dialog.Title id="error-dialog-title" className="text-lg font-semibold text-[var(--error)] flex items-center gap-3">
+                  <AlertCircle className="w-5 h-5" aria-hidden="true" />
                   Error
                 </Dialog.Title>
               </div>
               <div className="p-8">
-                <Dialog.Description className="text-[var(--cf-text-primary)] mb-8">
+                <Dialog.Description id="error-dialog-description" className="text-[var(--app-text-primary)] mb-8">
                   {error}
                 </Dialog.Description>
                 <div className="flex justify-end">
                   <button
-                    className="cf-button-primary"
+                    className="app-button-primary"
                     onClick={() => setError(null)}
+                    aria-label="Cerrar mensaje de error"
                   >
                     Close
                   </button>
