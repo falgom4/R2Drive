@@ -205,7 +205,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
           )}
           
           <button 
-            className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)] transition-colors"
+            className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)] transition-colors flex items-center justify-center"
             onClick={refreshContents}
             title="Refresh"
           >
@@ -213,7 +213,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
           </button>
           
           <button 
-            className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)] transition-colors"
+            className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)] transition-colors flex items-center justify-center"
             onClick={navigateToRoot}
             title="Go to root"
           >
@@ -222,26 +222,26 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
           
           <div className="flex border border-[var(--cf-border)] rounded-md overflow-hidden ml-2">
             <button 
-              className={`p-3 ${viewMode === 'list' ? 'bg-[var(--cf-surface-hover)]' : 'bg-transparent'}`}
+              className={`p-3 ${viewMode === 'list' ? 'bg-[var(--cf-surface-hover)]' : 'bg-transparent'} transition-colors`}
               onClick={() => setViewMode('list')}
               title="List view"
             >
               <i className="flex flex-col gap-1">
-                <span className="h-[2px] w-5 bg-current"></span>
-                <span className="h-[2px] w-5 bg-current"></span>
-                <span className="h-[2px] w-5 bg-current"></span>
+                <span className="h-[2px] w-5 bg-current rounded-full"></span>
+                <span className="h-[2px] w-5 bg-current rounded-full"></span>
+                <span className="h-[2px] w-5 bg-current rounded-full"></span>
               </i>
             </button>
             <button 
-              className={`p-3 ${viewMode === 'grid' ? 'bg-[var(--cf-surface-hover)]' : 'bg-transparent'}`}
+              className={`p-3 ${viewMode === 'grid' ? 'bg-[var(--cf-surface-hover)]' : 'bg-transparent'} transition-colors`}
               onClick={() => setViewMode('grid')}
               title="Grid view"
             >
               <i className="grid grid-cols-2 gap-1">
-                <span className="h-[7px] w-[7px] bg-current"></span>
-                <span className="h-[7px] w-[7px] bg-current"></span>
-                <span className="h-[7px] w-[7px] bg-current"></span>
-                <span className="h-[7px] w-[7px] bg-current"></span>
+                <span className="h-[7px] w-[7px] bg-current rounded-sm"></span>
+                <span className="h-[7px] w-[7px] bg-current rounded-sm"></span>
+                <span className="h-[7px] w-[7px] bg-current rounded-sm"></span>
+                <span className="h-[7px] w-[7px] bg-current rounded-sm"></span>
               </i>
             </button>
           </div>
@@ -452,11 +452,11 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <div className="relative">
                         <FolderOpen className="w-20 h-20 text-[var(--cf-orange)]" />
                         <button
-                          className={`absolute -top-2 -right-2 p-2 rounded-md shadow-md ${
+                          className={`absolute -top-2 -right-2 p-2 rounded-full shadow-sm ${
                             selectedItems.has(folder.prefix) 
                               ? 'bg-[var(--cf-orange)] text-white' 
                               : 'bg-[var(--cf-bg-dark)] text-[var(--cf-text-secondary)] border border-[var(--cf-border)]'
-                          }`}
+                          } transition-transform hover:scale-110`}
                           onClick={(e) => {
                             e.stopPropagation();
                             toggleItemSelection(folder.prefix, e);
@@ -485,11 +485,11 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <div className="relative">
                         <File className="w-20 h-20 text-[var(--cf-text-secondary)]" />
                         <button
-                          className={`absolute -top-2 -right-2 p-2 rounded-md shadow-md ${
+                          className={`absolute -top-2 -right-2 p-2 rounded-full shadow-sm ${
                             selectedItems.has(file.key) 
                               ? 'bg-[var(--cf-orange)] text-white' 
                               : 'bg-[var(--cf-bg-dark)] text-[var(--cf-text-secondary)] border border-[var(--cf-border)]'
-                          }`}
+                          } transition-transform hover:scale-110`}
                           onClick={(e) => toggleItemSelection(file.key, e)}
                         >
                           {selectedItems.has(file.key) 
