@@ -182,12 +182,12 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
   };
 
   return (
-    <div className="mega-card">
+    <div className="cf-card">
       {/* Header del explorador */}
-      <div className="p-5 border-b border-solid border-[var(--mega-border)] flex items-center justify-between bg-[var(--mega-secondary)]">
+      <div className="p-5 border-b border-solid border-[var(--cf-border)] flex items-center justify-between bg-[var(--cf-bg-dark)]">
         <div className="flex items-center gap-3">
-          <Cloud className="text-[var(--mega-primary)] w-6 h-6" />
-          <h2 className="text-xl font-semibold text-[var(--mega-text-primary)]">
+          <Cloud className="text-[var(--cf-orange)] w-6 h-6" />
+          <h2 className="text-xl font-semibold text-[var(--cf-text-primary)]">
             R2Drive Explorer
           </h2>
           {loading && <Loader2 className="w-5 h-5 animate-spin ml-3" />}
@@ -195,36 +195,36 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
         <div className="flex items-center gap-4">
           {selectedItems.size > 0 && (
             <button 
-              className="mega-button-secondary flex items-center gap-2 py-2 px-4 text-sm text-[var(--mega-primary)] hover:bg-[rgba(217,0,7,0.1)]"
+              className="cf-button-secondary flex items-center gap-2 py-2 px-4 text-sm text-[var(--cf-orange)] hover:bg-[rgba(246,130,31,0.1)]"
               onClick={handleDeleteClick}
-              title="Eliminar seleccionados"
+              title="Delete selected items"
             >
               <Trash2 className="w-4 h-4" />
-              <span>Eliminar ({selectedItems.size})</span>
+              <span>Delete ({selectedItems.size})</span>
             </button>
           )}
           
           <button 
-            className="p-3 rounded-full hover:bg-[var(--mega-surface-hover)] transition-colors"
+            className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)] transition-colors"
             onClick={refreshContents}
-            title="Actualizar"
+            title="Refresh"
           >
             <RefreshCw className="w-5 h-5" />
           </button>
           
           <button 
-            className="p-3 rounded-full hover:bg-[var(--mega-surface-hover)] transition-colors"
+            className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)] transition-colors"
             onClick={navigateToRoot}
-            title="Ir a la raíz"
+            title="Go to root"
           >
             <Home className="w-5 h-5" />
           </button>
           
-          <div className="flex border border-[var(--mega-border)] rounded-md overflow-hidden ml-2">
+          <div className="flex border border-[var(--cf-border)] rounded-md overflow-hidden ml-2">
             <button 
-              className={`p-3 ${viewMode === 'list' ? 'bg-[var(--mega-surface-hover)]' : 'bg-transparent'}`}
+              className={`p-3 ${viewMode === 'list' ? 'bg-[var(--cf-surface-hover)]' : 'bg-transparent'}`}
               onClick={() => setViewMode('list')}
-              title="Vista de lista"
+              title="List view"
             >
               <i className="flex flex-col gap-1">
                 <span className="h-[2px] w-5 bg-current"></span>
@@ -233,9 +233,9 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
               </i>
             </button>
             <button 
-              className={`p-3 ${viewMode === 'grid' ? 'bg-[var(--mega-surface-hover)]' : 'bg-transparent'}`}
+              className={`p-3 ${viewMode === 'grid' ? 'bg-[var(--cf-surface-hover)]' : 'bg-transparent'}`}
               onClick={() => setViewMode('grid')}
-              title="Vista de cuadrícula"
+              title="Grid view"
             >
               <i className="grid grid-cols-2 gap-1">
                 <span className="h-[7px] w-[7px] bg-current"></span>
@@ -249,8 +249,8 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
       </div>
       
       {/* Barra de navegación */}
-      <div className="mega-navigation px-5 py-4 bg-[var(--mega-surface)] border-b border-solid border-[var(--mega-border)]">
-        <div className="mega-navigation-path">
+      <div className="cf-navigation px-5 py-4 bg-[var(--cf-surface)] border-b border-solid border-[var(--cf-border)]">
+        <div className="cf-navigation-path">
           {currentPrefix ? (
             <>
               <button
@@ -258,12 +258,12 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                 className="flex items-center gap-2"
               >
                 <Home className="w-4 h-4" />
-                <span>Raíz</span>
+                <span>Root</span>
               </button>
               
               {currentPrefix.split('/').filter(Boolean).map((segment, index, array) => (
                 <div key={index} className="flex items-center">
-                  <span className="mx-2 text-[var(--mega-text-disabled)]">/</span>
+                  <span className="mx-2 text-[var(--cf-text-disabled)]">/</span>
                   <button
                     onClick={() => navigateToFolder(
                       array.slice(0, index + 1).join('/') + '/'
@@ -275,9 +275,9 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
               ))}
             </>
           ) : (
-            <button className="flex items-center gap-2 text-[var(--mega-primary)]">
+            <button className="flex items-center gap-2 text-[var(--cf-orange)]">
               <Home className="w-4 h-4" />
-              <span>Raíz</span>
+              <span>Root</span>
             </button>
           )}
         </div>
@@ -285,19 +285,19 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
         <div className="ml-auto">
           {currentPrefix && (
             <button 
-              className="mega-button-secondary flex items-center gap-2 py-2 px-4 text-sm"
+              className="cf-button-secondary flex items-center gap-2 py-2 px-4 text-sm"
               onClick={navigateToParent}
-              title="Volver a la carpeta superior"
+              title="Go back to parent folder"
             >
               <ChevronLeft className="w-4 h-4" />
-              <span>Volver</span>
+              <span>Back</span>
             </button>
           )}
         </div>
       </div>
       
       {error && (
-        <div className="mega-alert mega-alert-error mx-5 my-4">
+        <div className="cf-alert cf-alert-error mx-5 my-4">
           {error}
         </div>
       )}
@@ -305,8 +305,8 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
       {loading && !bucketContents ? (
         <div className="p-16 flex justify-center">
           <div className="text-center">
-            <Loader2 className="w-14 h-14 animate-spin text-[var(--mega-primary)] mx-auto mb-6" />
-            <p className="text-lg text-[var(--mega-text-secondary)]">Cargando contenido...</p>
+            <Loader2 className="w-14 h-14 animate-spin text-[var(--cf-orange)] mx-auto mb-6" />
+            <p className="text-lg text-[var(--cf-text-secondary)]">Loading content...</p>
           </div>
         </div>
       ) : (
@@ -314,29 +314,29 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
           {/* Vista de lista */}
           {viewMode === 'list' && (
             <div className="overflow-x-auto">
-              <table className="mega-table">
-                <thead className="mega-table-header">
+              <table className="cf-table">
+                <thead className="cf-table-header">
                   <tr>
                     <th style={{ width: '50px' }}></th>
-                    <th>Nombre</th>
-                    <th>Tamaño</th>
-                    <th>Modificado</th>
+                    <th>Name</th>
+                    <th>Size</th>
+                    <th>Modified</th>
                     <th style={{ width: '70px' }}></th>
                   </tr>
                 </thead>
-                <tbody className="mega-table-body">
+                <tbody className="cf-table-body">
                   {/* Carpetas */}
                   {bucketContents?.folders && bucketContents.folders.map((folder) => (
                     <tr 
                       key={folder.prefix}
-                      className={selectedItems.has(folder.prefix) ? 'bg-[rgba(217,0,7,0.05)]' : ''}
+                      className={selectedItems.has(folder.prefix) ? 'bg-[rgba(246,130,31,0.05)]' : ''}
                     >
                       <td>
                         <button
                           className={`p-3 rounded-full ${
                             selectedItems.has(folder.prefix) 
-                              ? 'text-[var(--mega-primary)]' 
-                              : 'text-[var(--mega-text-secondary)]'
+                              ? 'text-[var(--cf-orange)]' 
+                              : 'text-[var(--cf-text-secondary)]'
                           }`}
                           onClick={(e) => toggleItemSelection(folder.prefix, e)}
                         >
@@ -348,10 +348,10 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       </td>
                       <td>
                         <div 
-                          className="mega-table-file-name cursor-pointer"
+                          className="cf-table-file-name cursor-pointer"
                           onClick={() => navigateToFolder(folder.prefix)}
                         >
-                          <FolderOpen className="w-6 h-6 text-[var(--mega-primary)] mega-file-icon" />
+                          <FolderOpen className="w-6 h-6 text-[var(--cf-orange)] cf-file-icon" />
                           <span>{folder.name}/</span>
                         </div>
                       </td>
@@ -359,9 +359,9 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <td>-</td>
                       <td>
                         <button 
-                          className="p-3 rounded-full hover:bg-[var(--mega-surface-hover)]"
+                          className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)]"
                           onClick={() => navigateToFolder(folder.prefix)}
-                          title="Abrir carpeta"
+                          title="Open folder"
                         >
                           <ChevronLeft className="w-5 h-5 rotate-180" />
                         </button>
@@ -373,14 +373,14 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                   {bucketContents?.files && bucketContents.files.map((file) => (
                     <tr 
                       key={file.key}
-                      className={selectedItems.has(file.key) ? 'bg-[rgba(217,0,7,0.05)]' : ''}
+                      className={selectedItems.has(file.key) ? 'bg-[rgba(246,130,31,0.05)]' : ''}
                     >
                       <td>
                         <button
                           className={`p-3 rounded-full ${
                             selectedItems.has(file.key) 
-                              ? 'text-[var(--mega-primary)]' 
-                              : 'text-[var(--mega-text-secondary)]'
+                              ? 'text-[var(--cf-orange)]' 
+                              : 'text-[var(--cf-text-secondary)]'
                           }`}
                           onClick={(e) => toggleItemSelection(file.key, e)}
                         >
@@ -391,8 +391,8 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                         </button>
                       </td>
                       <td>
-                        <div className="mega-table-file-name">
-                          <File className="w-6 h-6 text-[var(--mega-text-secondary)] mega-file-icon" />
+                        <div className="cf-table-file-name">
+                          <File className="w-6 h-6 text-[var(--cf-text-secondary)] cf-file-icon" />
                           <span>{file.name}</span>
                         </div>
                       </td>
@@ -400,8 +400,8 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <td>{formatDate(file.lastModified)}</td>
                       <td>
                         <button 
-                          className="p-3 rounded-full hover:bg-[var(--mega-surface-hover)]"
-                          title="Descargar archivo"
+                          className="p-3 rounded-full hover:bg-[var(--cf-surface-hover)]"
+                          title="Download file"
                         >
                           <Download className="w-5 h-5" />
                         </button>
@@ -414,16 +414,16 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                    (!bucketContents?.files || bucketContents.files.length === 0) && (
                     <tr>
                       <td colSpan={5} className="text-center py-12">
-                        <div className="inline-block p-6 rounded-full bg-[var(--mega-surface-hover)] mb-6">
-                          <FolderOpen className="w-12 h-12 text-[var(--mega-text-secondary)]" />
+                        <div className="inline-block p-6 rounded-full bg-[var(--cf-surface-hover)] mb-6">
+                          <FolderOpen className="w-12 h-12 text-[var(--cf-text-secondary)]" />
                         </div>
-                        <p className="text-lg text-[var(--mega-text-secondary)] mb-4">No hay archivos ni carpetas en esta ubicación</p>
+                        <p className="text-lg text-[var(--cf-text-secondary)] mb-4">No files or folders in this location</p>
                         {currentPrefix && (
                           <button 
-                            className="mega-button mt-6"
+                            className="cf-button-primary mt-6"
                             onClick={() => onSelectFolder && onSelectFolder(currentPrefix)}
                           >
-                            Usar esta carpeta para subir
+                            Use this folder for uploads
                           </button>
                         )}
                       </td>
@@ -436,25 +436,25 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
           
           {/* Vista de cuadrícula */}
           {viewMode === 'grid' && (
-            <div className="p-4">
-              <div className="mega-grid">
+            <div className="p-5">
+              <div className="cf-grid">
                 {/* Carpetas */}
                 {bucketContents?.folders && bucketContents.folders.map((folder) => (
                   <div 
                     key={folder.prefix}
-                    className={`mega-grid-item ${selectedItems.has(folder.prefix) ? 'ring-2 ring-[var(--mega-primary)]' : ''}`}
+                    className={`cf-grid-item ${selectedItems.has(folder.prefix) ? 'ring-2 ring-[var(--cf-orange)]' : ''}`}
                   >
                     <div 
-                      className="p-3 flex flex-col items-center"
+                      className="p-4 flex flex-col items-center"
                       onClick={() => navigateToFolder(folder.prefix)}
                     >
                       <div className="relative">
-                        <FolderOpen className="w-16 h-16 text-[var(--mega-primary)]" />
+                        <FolderOpen className="w-20 h-20 text-[var(--cf-orange)]" />
                         <button
-                          className={`absolute -top-1 -right-1 p-1 rounded-full ${
+                          className={`absolute -top-2 -right-2 p-2 rounded-full ${
                             selectedItems.has(folder.prefix) 
-                              ? 'bg-[var(--mega-primary)] text-white' 
-                              : 'bg-[var(--mega-surface-hover)] text-[var(--mega-text-secondary)]'
+                              ? 'bg-[var(--cf-orange)] text-white' 
+                              : 'bg-[var(--cf-surface-hover)] text-[var(--cf-text-secondary)]'
                           }`}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -462,12 +462,14 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                           }}
                         >
                           {selectedItems.has(folder.prefix) 
-                            ? <Check className="w-3 h-3" /> 
-                            : <MoreHorizontal className="w-3 h-3" />
+                            ? <Check className="w-4 h-4" /> 
+                            : <MoreHorizontal className="w-4 h-4" />
                           }
                         </button>
                       </div>
-                      <span className="mt-2 text-center truncate w-full">{folder.name}/</span>
+                      <span className="mt-4 text-center truncate w-full">
+                        {folder.name}/
+                      </span>
                     </div>
                   </div>
                 ))}
@@ -476,27 +478,27 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                 {bucketContents?.files && bucketContents.files.map((file) => (
                   <div 
                     key={file.key}
-                    className={`mega-grid-item ${selectedItems.has(file.key) ? 'ring-2 ring-[var(--mega-primary)]' : ''}`}
+                    className={`cf-grid-item ${selectedItems.has(file.key) ? 'ring-2 ring-[var(--cf-orange)]' : ''}`}
                   >
-                    <div className="p-3 flex flex-col items-center">
+                    <div className="p-4 flex flex-col items-center">
                       <div className="relative">
-                        <File className="w-16 h-16 text-[var(--mega-text-secondary)]" />
+                        <File className="w-20 h-20 text-[var(--cf-text-secondary)]" />
                         <button
-                          className={`absolute -top-1 -right-1 p-1 rounded-full ${
+                          className={`absolute -top-2 -right-2 p-2 rounded-full ${
                             selectedItems.has(file.key) 
-                              ? 'bg-[var(--mega-primary)] text-white' 
-                              : 'bg-[var(--mega-surface-hover)] text-[var(--mega-text-secondary)]'
+                              ? 'bg-[var(--cf-orange)] text-white' 
+                              : 'bg-[var(--cf-surface-hover)] text-[var(--cf-text-secondary)]'
                           }`}
                           onClick={(e) => toggleItemSelection(file.key, e)}
                         >
                           {selectedItems.has(file.key) 
-                            ? <Check className="w-3 h-3" /> 
-                            : <MoreHorizontal className="w-3 h-3" />
+                            ? <Check className="w-4 h-4" /> 
+                            : <MoreHorizontal className="w-4 h-4" />
                           }
                         </button>
                       </div>
-                      <span className="mt-2 text-center truncate w-full">{file.name}</span>
-                      <span className="text-xs text-[var(--mega-text-secondary)]">{formatFileSize(file.size)}</span>
+                      <span className="mt-4 text-center truncate w-full">{file.name}</span>
+                      <span className="text-xs text-[var(--cf-text-secondary)] mt-2">{formatFileSize(file.size)}</span>
                     </div>
                   </div>
                 ))}
@@ -504,17 +506,17 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                 {/* Mensaje cuando no hay contenido */}
                 {(!bucketContents?.folders || bucketContents.folders.length === 0) && 
                  (!bucketContents?.files || bucketContents.files.length === 0) && (
-                  <div className="col-span-full p-10 text-center">
-                    <div className="inline-block p-4 rounded-full bg-[var(--mega-surface-hover)] mb-4">
-                      <FolderOpen className="w-10 h-10 text-[var(--mega-text-secondary)]" />
+                  <div className="col-span-full p-16 text-center">
+                    <div className="inline-block p-6 rounded-full bg-[var(--cf-surface-hover)] mb-6">
+                      <FolderOpen className="w-14 h-14 text-[var(--cf-text-secondary)]" />
                     </div>
-                    <p className="text-[var(--mega-text-secondary)]">No hay archivos ni carpetas en esta ubicación</p>
+                    <p className="text-lg text-[var(--cf-text-secondary)] mb-4">No files or folders in this location</p>
                     {currentPrefix && (
                       <button 
-                        className="mega-button mt-4"
+                        className="cf-button-primary mt-6"
                         onClick={() => onSelectFolder && onSelectFolder(currentPrefix)}
                       >
-                        Usar esta carpeta para subir
+                        Use this folder for uploads
                       </button>
                     )}
                   </div>
@@ -535,28 +537,28 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
         <Dialog.Portal>
           <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
           <Dialog.Content 
-            className="fixed p-0 rounded-xl shadow-2xl w-full max-w-md mega-card" 
+            className="fixed p-0 rounded-xl shadow-2xl w-full max-w-md cf-card" 
             style={{
               left: '50%',
               top: '50%',
               transform: 'translate(-50%, -50%)'
             }}
           >
-            <div className="px-6 py-4 border-b border-[var(--mega-border)] bg-[rgba(217,0,7,0.1)]">
-              <Dialog.Title className="text-lg font-semibold text-[var(--mega-primary)] flex items-center gap-2">
+            <div className="px-6 py-5 border-b border-[var(--cf-border)] bg-[rgba(246,130,31,0.1)]">
+              <Dialog.Title className="text-lg font-semibold text-[var(--cf-orange)] flex items-center gap-3">
                 <Trash2 className="w-5 h-5" />
-                Confirmar eliminación
+                Confirm Deletion
               </Dialog.Title>
             </div>
-            <div className="p-6">
-              <Dialog.Description className="text-[var(--mega-text-primary)] mb-6">
-                ¿Estás seguro que deseas eliminar {confirmDelete.items.length} elemento(s)? Esta acción no se puede deshacer.
+            <div className="p-8">
+              <Dialog.Description className="text-[var(--cf-text-primary)] mb-8">
+                Are you sure you want to delete {confirmDelete.items.length} item(s)? This action cannot be undone.
                 
-                <div className="mt-4 bg-[var(--mega-surface)] rounded-lg p-3 max-h-40 overflow-y-auto">
-                  <ul className="list-disc pl-5 space-y-1">
+                <div className="mt-6 bg-[var(--cf-surface)] rounded-lg p-5 max-h-48 overflow-y-auto">
+                  <ul className="list-disc pl-6 space-y-2">
                     {confirmDelete.items.map((item, index) => (
                       <li key={index} className="text-sm">
-                        <span className={item.isFolder ? 'text-[var(--mega-primary)]' : 'text-[var(--mega-text-primary)]'}>
+                        <span className={item.isFolder ? 'text-[var(--cf-orange)]' : 'text-[var(--cf-text-primary)]'}>
                           {item.name}{item.isFolder ? '/' : ''}
                         </span>
                       </li>
@@ -564,29 +566,29 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                   </ul>
                 </div>
               </Dialog.Description>
-              <div className="flex justify-end gap-3">
+              <div className="flex justify-end gap-4">
                 <button
-                  className="mega-button-secondary flex items-center gap-2"
+                  className="cf-button-secondary flex items-center gap-3"
                   onClick={() => setConfirmDelete({ isOpen: false, items: [] })}
                   disabled={isDeleting}
                 >
-                  <X className="w-4 h-4" />
-                  <span>Cancelar</span>
+                  <X className="w-5 h-5" />
+                  <span>Cancel</span>
                 </button>
                 <button
-                  className="mega-button flex items-center gap-2"
+                  className="cf-button-primary flex items-center gap-3"
                   onClick={deleteSelectedItems}
                   disabled={isDeleting}
                 >
                   {isDeleting ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      <span>Eliminando...</span>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span>Deleting...</span>
                     </>
                   ) : (
                     <>
-                      <Trash2 className="w-4 h-4" />
-                      <span>Eliminar</span>
+                      <Trash2 className="w-5 h-5" />
+                      <span>Delete</span>
                     </>
                   )}
                 </button>
