@@ -1,142 +1,142 @@
-# R2Drive - Gestor de Archivos para Cloudflare R2
+# R2Drive - File Manager for Cloudflare R2
 
-R2Drive es una aplicación web moderna que permite gestionar archivos en Cloudflare R2 de manera fácil e intuitiva. Con una interfaz inspirada en MEGA, ofrece funcionalidades como:
+R2Drive is a modern web application that allows you to easily and intuitively manage files in Cloudflare R2. With an interface inspired by MEGA, it offers functionalities such as:
 
-- 📂 Exploración completa del bucket con vista de lista o cuadrícula
-- 📤 Subida de archivos individuales o carpetas completas mediante drag & drop
-- 🗂️ Organización en carpetas y subcarpetas
-- 🗑️ Eliminación de archivos y carpetas
-- 🔄 Actualización en tiempo real del contenido
+- 📂 Complete bucket exploration with list or grid view
+- 📤 Upload individual files or entire folders via drag & drop
+- 🗂️ Organization in folders and subfolders
+- 🗑️ Deletion of files and folders
+- 🔄 Real-time content updates
 
 ![R2Drive Screenshot](https://ejemplo.com/screenshot.png)
 
-## Requisitos
+## Requirements
 
-- Node.js 18 o superior
-- Cuenta en Cloudflare con acceso a R2
-- Bucket R2 creado en Cloudflare
+- Node.js 18 or higher
+- Cloudflare account with R2 access
+- R2 bucket created in Cloudflare
 
-## Instalación
+## Installation
 
-1. Clona este repositorio:
+1. Clone this repository:
    ```bash
    git clone https://github.com/falgom4/R2Drive.git
    cd R2Drive
    ```
 
-2. Instala las dependencias:
+2. Install dependencies:
    ```bash
    npm install
    ```
 
-3. Crea un archivo `.env.local` con tus credenciales de Cloudflare R2:
+3. Create a `.env.local` file with your Cloudflare R2 credentials:
    ```
-   CLOUDFLARE_ACCOUNT_ID=tu_account_id
-   CLOUDFLARE_ACCESS_KEY_ID=tu_access_key_id
-   CLOUDFLARE_SECRET_ACCESS_KEY=tu_secret_access_key
-   CLOUDFLARE_R2_BUCKET=nombre_de_tu_bucket
-   CLOUDFLARE_R2_PUBLIC_URL=url_publica_de_tu_bucket (opcional)
+   CLOUDFLARE_ACCOUNT_ID=your_account_id
+   CLOUDFLARE_ACCESS_KEY_ID=your_access_key_id
+   CLOUDFLARE_SECRET_ACCESS_KEY=your_secret_access_key
+   CLOUDFLARE_R2_BUCKET=your_bucket_name
+   CLOUDFLARE_R2_PUBLIC_URL=your_bucket_public_url (optional)
    ```
 
-4. Inicia la aplicación:
+4. Start the application:
    ```bash
    npm run dev
    ```
 
-5. Abre http://localhost:3000 en tu navegador
+5. Open http://localhost:3000 in your browser
 
-## Configuración de Credenciales de Cloudflare R2
+## Cloudflare R2 Credentials Configuration
 
-Para configurar correctamente R2Drive con tu cuenta de Cloudflare R2, sigue estos pasos:
+To correctly configure R2Drive with your Cloudflare R2 account, follow these steps:
 
-### 1. Obtener las Credenciales de R2
+### 1. Obtain R2 Credentials
 
-1. Inicia sesión en el [Dashboard de Cloudflare](https://dash.cloudflare.com)
-2. Selecciona tu cuenta 
-3. En el menú lateral, ve a **R2**
-4. Si aún no tienes un bucket, crea uno con el botón **Create bucket**
-5. Para obtener las credenciales, ve a la pestaña **Administrar R2 API Tokens**
-6. Haz clic en **Crear nuevo token** y selecciona **Token de clave de API de R2**
-7. Asigna un nombre al token (por ejemplo, "R2Drive Access")
-8. Selecciona los permisos necesarios (recomendado: lectura y escritura)
-9. Haz clic en **Crear token de API**
-10. Guarda el **Access Key ID** y **Secret Access Key** mostrados (esta será la única vez que puedas ver la Secret Key)
+1. Sign in to the [Cloudflare Dashboard](https://dash.cloudflare.com)
+2. Select your account (falgom4)
+3. In the sidebar menu, go to **R2**
+4. If you don't have a bucket yet, create one with the **Create bucket** button
+5. To get credentials, go to the **Manage R2 API Tokens** tab
+6. Click on **Create new token** and select **R2 API Key Token**
+7. Assign a name to the token (for example, "R2Drive Access")
+8. Select the necessary permissions (recommended: read and write)
+9. Click on **Create API token**
+10. Save the **Access Key ID** and **Secret Access Key** shown (this will be the only time you can see the Secret Key)
 
-### 2. Configurar el archivo .env.local
+### 2. Configure the .env.local file
 
-Crea un archivo `.env.local` en la raíz del proyecto con el siguiente contenido:
+Create a `.env.local` file in the project root with the following content:
 
 ```
-CLOUDFLARE_ACCOUNT_ID=tu_account_id
-CLOUDFLARE_ACCESS_KEY_ID=tu_access_key_id
-CLOUDFLARE_SECRET_ACCESS_KEY=tu_secret_access_key
-CLOUDFLARE_R2_BUCKET=nombre_de_tu_bucket
-CLOUDFLARE_R2_PUBLIC_URL=url_publica_de_tu_bucket (opcional)
+CLOUDFLARE_ACCOUNT_ID=your_account_id
+CLOUDFLARE_ACCESS_KEY_ID=your_access_key_id
+CLOUDFLARE_SECRET_ACCESS_KEY=your_secret_access_key
+CLOUDFLARE_R2_BUCKET=your_bucket_name
+CLOUDFLARE_R2_PUBLIC_URL=your_bucket_public_url (optional)
 ```
 
-Donde:
-- `CLOUDFLARE_ACCOUNT_ID`: Tu ID de cuenta de Cloudflare (visible en la URL del dashboard)
-- `CLOUDFLARE_ACCESS_KEY_ID`: El Access Key ID generado en el paso anterior
-- `CLOUDFLARE_SECRET_ACCESS_KEY`: El Secret Access Key generado en el paso anterior
-- `CLOUDFLARE_R2_BUCKET`: El nombre del bucket R2 que deseas gestionar
-- `CLOUDFLARE_R2_PUBLIC_URL`: (Opcional) Si has configurado un dominio personalizado para tu bucket
+Where:
+- `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID (visible in the dashboard URL)
+- `CLOUDFLARE_ACCESS_KEY_ID`: The Access Key ID generated in the previous step
+- `CLOUDFLARE_SECRET_ACCESS_KEY`: The Secret Access Key generated in the previous step
+- `CLOUDFLARE_R2_BUCKET`: The name of the R2 bucket you want to manage
+- `CLOUDFLARE_R2_PUBLIC_URL`: (Optional) If you've configured a custom domain for your bucket
 
-## Uso de la Aplicación
+## Using the Application
 
-1. Al iniciar la aplicación, verás la pantalla principal con un área de "drag & drop"
-2. Haz clic en **Mostrar explorador de bucket** para ver los contenidos actuales
-3. Puedes navegar por las carpetas haciendo clic en ellas
-4. Para subir archivos:
-   - Arrastra archivos o carpetas al área designada
-   - Los archivos se subirán a la carpeta actualmente seleccionada
-   - Verás el progreso en tiempo real
-5. Para eliminar archivos o carpetas:
-   - Selecciona los elementos haciendo clic en el icono al lado de cada uno
-   - Haz clic en el botón **Eliminar** que aparece en la barra superior
-   - Confirma la eliminación en el diálogo
+1. When starting the application, you'll see the main screen with a "drag & drop" area
+2. Click on **Show bucket explorer** to see the current contents
+3. You can navigate through folders by clicking on them
+4. To upload files:
+   - Drag files or folders to the designated area
+   - Files will be uploaded to the currently selected folder
+   - You'll see progress in real time
+5. To delete files or folders:
+   - Select items by clicking on the icon next to each one
+   - Click on the **Delete** button that appears in the top bar
+   - Confirm deletion in the dialog
 
-## Características Avanzadas
+## Advanced Features
 
-- **Vista de Lista/Cuadrícula**: Cambia entre diferentes modos de visualización con los botones en la esquina superior derecha
-- **Navegación por Rutas**: La barra de navegación muestra la ruta actual y permite volver rápidamente a cualquier nivel
-- **Selección Múltiple**: Puedes seleccionar varios archivos y carpetas para eliminarlos a la vez
-- **Información Detallada**: En la vista de lista se muestra información como tamaño y fecha de modificación
+- **List/Grid View**: Switch between different viewing modes with the buttons in the top right corner
+- **Path Navigation**: The navigation bar shows the current path and allows you to quickly return to any level
+- **Multiple Selection**: You can select multiple files and folders to delete them at once
+- **Detailed Information**: In list view, information such as size and modification date is displayed
 
-## Desarrollo
+## Development
 
-Si deseas contribuir al proyecto o personalizarlo:
+If you want to contribute to the project or customize it:
 
 ```bash
-# Modo desarrollo
+# Development mode
 npm run dev
 
-# Construir para producción
+# Build for production
 npm run build
 
-# Iniciar versión de producción
+# Start production version
 npm start
 
-# Ejecutar linter
+# Run linter
 npm run lint
 ```
 
-## Despliegue
+## Deployment
 
-Esta aplicación puede desplegarse en cualquier plataforma que soporte Next.js, como Vercel, Netlify o tu propio servidor.
+This application can be deployed on any platform that supports Next.js, such as Vercel, Netlify, or your own server.
 
 ```bash
 npm run build
 npm start
 ```
 
-## Soporte
+## Support
 
-Si encuentras algún problema o tienes alguna pregunta, por favor crea un issue en el repositorio de GitHub.
+If you find any issues or have any questions, please create an issue in the GitHub repository.
 
-## Licencia
+## License
 
-Este proyecto está licenciado bajo la licencia MIT - ver el archivo LICENSE para más detalles.
+This project is licensed under the MIT license - see the LICENSE file for more details.
 
 ---
 
-Desarrollado por falgom4
+Developed by falgom4
