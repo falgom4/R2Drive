@@ -223,32 +223,32 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
             <span>Root</span>
           </button>
           
-          <div className="flex border border-[var(--app-border)] rounded-md overflow-hidden ml-2" role="group" aria-label="Cambiar vista">
+          <div className="flex items-center gap-2" role="group" aria-label="Cambiar vista">
             <button 
-              className={`p-3 ${viewMode === 'list' ? 'bg-[var(--app-surface-hover)]' : 'bg-transparent'} transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary)]`}
+              className={`navigation-button p-2 w-10 h-10 ${viewMode === 'list' ? 'bg-[var(--app-surface-hover)] border-[var(--primary)]' : ''}`}
               onClick={() => setViewMode('list')}
               title="List view"
               aria-label="Vista de lista"
               aria-pressed={viewMode === 'list'}
             >
-              <i className="flex flex-col gap-1" aria-hidden="true">
+              <i className="flex flex-col gap-1 items-center justify-center" aria-hidden="true">
                 <span className="h-[2px] w-5 bg-current rounded-full"></span>
                 <span className="h-[2px] w-5 bg-current rounded-full"></span>
                 <span className="h-[2px] w-5 bg-current rounded-full"></span>
               </i>
             </button>
             <button 
-              className={`p-3 ${viewMode === 'grid' ? 'bg-[var(--app-surface-hover)]' : 'bg-transparent'} transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--primary)]`}
+              className={`navigation-button p-2 w-10 h-10 ${viewMode === 'grid' ? 'bg-[var(--app-surface-hover)] border-[var(--primary)]' : ''}`}
               onClick={() => setViewMode('grid')}
               title="Grid view"
               aria-label="Vista de cuadrícula"
               aria-pressed={viewMode === 'grid'}
             >
-              <i className="grid grid-cols-2 gap-1" aria-hidden="true">
-                <span className="h-[7px] w-[7px] bg-current rounded-sm"></span>
-                <span className="h-[7px] w-[7px] bg-current rounded-sm"></span>
-                <span className="h-[7px] w-[7px] bg-current rounded-sm"></span>
-                <span className="h-[7px] w-[7px] bg-current rounded-sm"></span>
+              <i className="grid grid-cols-2 gap-1 items-center justify-center" aria-hidden="true">
+                <span className="h-[6px] w-[6px] bg-current rounded-sm"></span>
+                <span className="h-[6px] w-[6px] bg-current rounded-sm"></span>
+                <span className="h-[6px] w-[6px] bg-current rounded-sm"></span>
+                <span className="h-[6px] w-[6px] bg-current rounded-sm"></span>
               </i>
             </button>
           </div>
