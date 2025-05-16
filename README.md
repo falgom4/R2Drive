@@ -139,4 +139,3 @@ This project is licensed under the MIT license - see the LICENSE file for more d
 
 ---
 
-Developed by falgom4
