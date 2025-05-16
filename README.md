@@ -52,7 +52,7 @@ To correctly configure R2Drive with your Cloudflare R2 account, follow these ste
 ### 1. Obtain R2 Credentials
 
 1. Sign in to the [Cloudflare Dashboard](https://dash.cloudflare.com)
-2. Select your account (falgom4)
+2. Select your account
 3. In the sidebar menu, go to **R2**
 4. If you don't have a bucket yet, create one with the **Create bucket** button
 5. To get credentials, go to the **Manage R2 API Tokens** tab
