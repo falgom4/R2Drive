@@ -81,7 +81,7 @@ export async function uploadFile(
             const response = JSON.parse(xhr.responseText);
             if (onProgress) onProgress(100);
             resolve(response.key);
-          } catch (error) {
+          } catch {
             reject(new Error('Error al analizar la respuesta del servidor'));
           }
         } else {
@@ -89,7 +89,7 @@ export async function uploadFile(
           try {
             const errorData = JSON.parse(xhr.responseText);
             errorMessage = errorData.error || errorMessage;
-          } catch (e) {
+          } catch {
             // Si no se puede analizar el error, usar el mensaje predeterminado
           }
           reject(new Error(errorMessage));

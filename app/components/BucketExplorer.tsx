@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Folder, File, ChevronLeft, RefreshCw, Loader2, FolderOpen, Home, Trash2, MoreHorizontal, Check, X, Cloud, Download } from 'lucide-react';
+import { File, ChevronLeft, RefreshCw, Loader2, FolderOpen, Home, Trash2, MoreHorizontal, Check, X, Cloud, Download } from 'lucide-react';
 import { listBucketObjects, BucketListResponse, deleteObject } from '../lib/upload';
 import * as Dialog from '@radix-ui/react-dialog';
 

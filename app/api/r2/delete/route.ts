@@ -51,7 +51,7 @@ export async function DELETE(request: NextRequest) {
         });
         
         await r2Client.send(deleteCommand);
-      } catch (error) {
+      } catch {
         // Si no existe el marcador de carpeta, es normal y continuamos
         console.log('Marcador de carpeta no encontrado o ya eliminado');
       }

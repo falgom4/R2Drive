@@ -1,9 +1,8 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { Upload, Folder, Check, AlertCircle, Wifi, WifiOff, FileText, Cloud, Shield, Settings, XCircle, ArrowUp, Loader2, Sun, Moon, LogOut, Database, RefreshCw } from 'lucide-react';
+import { Upload, Check, AlertCircle, Wifi, WifiOff, Cloud, Shield, Settings, XCircle, ArrowUp, Loader2, Sun, Moon, LogOut, RefreshCw } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
-import * as Progress from '@radix-ui/react-progress';
 import { uploadDirectory, verifyBucketConnection, UploadProgress, uploadFile } from './lib/upload';
 import BucketExplorer from './components/BucketExplorer';
 import ConfigurationModal from './components/ConfigurationModal';
@@ -220,14 +219,14 @@ export default function Home() {
         // Actualizar estado
         setUploadedFiles(results);
         setSuccess(true);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error during upload:', err);
-        setError(err.message || 'Error uploading files');
+        setError(err instanceof Error ? err.message : 'Error uploading files');
       } finally {
         setUploading(false);
       }
     },
-    [isBucketConnected, currentUploadPath, uploadProgress]
+    [isBucketConnected, currentUploadPath]
   );
 
   // Manejar cambio de archivos por input
@@ -269,14 +268,14 @@ export default function Home() {
         // Actualizar estado
         setUploadedFiles(results);
         setSuccess(true);
-      } catch (err: any) {
+      } catch (err: unknown) {
         console.error('Error during upload:', err);
-        setError(err.message || 'Error uploading files');
+        setError(err instanceof Error ? err.message : 'Error uploading files');
       } finally {
         setUploading(false);
       }
     },
-    [isBucketConnected, currentUploadPath, uploadProgress]
+    [isBucketConnected, currentUploadPath]
   );
 
   // Toggle theme between light and dark mode
