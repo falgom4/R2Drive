@@ -29,21 +29,24 @@ R2Drive is a modern web application that allows you to easily and intuitively ma
    npm install
    ```
 
-3. Create a `.env.local` file with your Cloudflare R2 credentials:
+3. Configure your Cloudflare R2 credentials:
+   
+   **Option 1: Via Web Interface (Recommended)**
+   - Start the application with `npm run dev`
+   - Open http://localhost:3000
+   - The configuration modal will appear automatically
+   - Enter your R2 credentials in the form
+   
+   **Option 2: Via .env.local file**
    ```
-   CLOUDFLARE_ACCOUNT_ID=your_account_id
-   CLOUDFLARE_ACCESS_KEY_ID=your_access_key_id
-   CLOUDFLARE_SECRET_ACCESS_KEY=your_secret_access_key
-   CLOUDFLARE_R2_BUCKET=your_bucket_name
-   CLOUDFLARE_R2_PUBLIC_URL=your_bucket_public_url (optional)
+   R2_ACCOUNT_ID=your_account_id
+   R2_ACCESS_KEY_ID=your_access_key_id
+   R2_SECRET_ACCESS_KEY=your_secret_access_key
+   R2_BUCKET_NAME=your_bucket_name
+   R2_PUBLIC_URL=your_bucket_public_url (optional)
    ```
 
-4. Start the application:
-   ```bash
-   npm run dev
-   ```
-
-5. Open http://localhost:3000 in your browser
+4. Open http://localhost:3000 in your browser and configure your credentials through the interface
 
 ## Cloudflare R2 Credentials Configuration
 
@@ -62,38 +65,57 @@ To correctly configure R2Drive with your Cloudflare R2 account, follow these ste
 9. Click on **Create API token**
 10. Save the **Access Key ID** and **Secret Access Key** shown (this will be the only time you can see the Secret Key)
 
-### 2. Configure the .env.local file
+### 2. Configure Credentials in R2Drive
 
+**Method 1: Web Interface (Recommended)**
+1. Start the application with `npm run dev`
+2. Open http://localhost:3000 in your browser
+3. The configuration modal will appear automatically if no credentials are detected
+4. Or click the **Settings button (⚙️)** in the top right corner and select **"Configure credentials"**
+5. Fill in the form with your R2 credentials:
+   - **Account ID**: Your Cloudflare account ID (visible in the dashboard URL)
+   - **Access Key ID**: The Access Key ID generated in the previous step
+   - **Secret Access Key**: The Secret Access Key generated in the previous step
+   - **Bucket Name**: The name of the R2 bucket you want to manage
+   - **Public URL**: (Optional) If you've configured a custom domain for your bucket
+6. Click **Save** - the connection will be verified automatically
+
+**Method 2: .env.local file**
 Create a `.env.local` file in the project root with the following content:
 
 ```
-CLOUDFLARE_ACCOUNT_ID=your_account_id
-CLOUDFLARE_ACCESS_KEY_ID=your_access_key_id
-CLOUDFLARE_SECRET_ACCESS_KEY=your_secret_access_key
-CLOUDFLARE_R2_BUCKET=your_bucket_name
-CLOUDFLARE_R2_PUBLIC_URL=your_bucket_public_url (optional)
+R2_ACCOUNT_ID=your_account_id
+R2_ACCESS_KEY_ID=your_access_key_id
+R2_SECRET_ACCESS_KEY=your_secret_access_key
+R2_BUCKET_NAME=your_bucket_name
+R2_PUBLIC_URL=your_bucket_public_url (optional)
 ```
 
-Where:
-- `CLOUDFLARE_ACCOUNT_ID`: Your Cloudflare account ID (visible in the dashboard URL)
-- `CLOUDFLARE_ACCESS_KEY_ID`: The Access Key ID generated in the previous step
-- `CLOUDFLARE_SECRET_ACCESS_KEY`: The Secret Access Key generated in the previous step
-- `CLOUDFLARE_R2_BUCKET`: The name of the R2 bucket you want to manage
-- `CLOUDFLARE_R2_PUBLIC_URL`: (Optional) If you've configured a custom domain for your bucket
+**Note**: The environment variables use `R2_` prefix, not `CLOUDFLARE_` as shown in older versions.
 
 ## Using the Application
 
-1. When starting the application, you'll see the main screen with a "drag & drop" area
-2. Click on **Show bucket explorer** to see the current contents
-3. You can navigate through folders by clicking on them
-4. To upload files:
-   - Drag files or folders to the designated area
+### Initial Setup
+1. Configure your R2 credentials using the web interface (see configuration section above)
+2. The connection status will be shown with a green "Connected to bucket" badge
+
+### File Management
+1. **View Files**: Click on **Show bucket explorer** to see the current contents
+2. **Navigate**: Click on folders to enter them, use the breadcrumb navigation to go back
+3. **Upload Files**:
+   - Drag files or entire folders to the designated drop area
+   - Or click **Browse files** to select files manually
    - Files will be uploaded to the currently selected folder
-   - You'll see progress in real time
-5. To delete files or folders:
+   - Real-time progress tracking is displayed
+4. **Delete Files**:
    - Select items by clicking on the icon next to each one
    - Click on the **Delete** button that appears in the top bar
    - Confirm deletion in the dialog
+
+### Settings
+- **Theme Toggle**: Switch between light and dark modes
+- **Refresh Connection**: Manually verify bucket connection
+- **Reconfigure Credentials**: Update your R2 settings anytime
 
 ## Advanced Features
 

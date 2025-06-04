@@ -1,15 +1,26 @@
 import { ListObjectsV2Command } from '@aws-sdk/client-s3';
-import { r2Client, BUCKET_NAME } from '@/app/lib/r2-server';
+import { getR2Client, getBucketName, hasR2Config } from '@/app/lib/r2-server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
+    // Verificar que hay configuración antes de intentar conectar
+    if (!hasR2Config()) {
+      return NextResponse.json(
+        { success: false, error: 'No R2 configuration found' },
+        { status: 500 }
+      );
+    }
+
+    const r2Client = getR2Client();
+    const bucketName = getBucketName();
+    
     const searchParams = request.nextUrl.searchParams;
     const prefix = searchParams.get('prefix') || '';
     const delimiter = '/'; // Usar delimitador para simular navegación por carpetas
     
     const command = new ListObjectsV2Command({
-      Bucket: BUCKET_NAME,
+      Bucket: bucketName,
       Prefix: prefix,
       Delimiter: delimiter,
       MaxKeys: 1000,

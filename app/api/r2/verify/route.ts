@@ -1,11 +1,19 @@
 import { ListObjectsCommand } from '@aws-sdk/client-s3';
-import { r2Client, BUCKET_NAME } from '@/app/lib/r2-server';
+import { getR2Client, getBucketName, hasR2Config } from '@/app/lib/r2-server';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
   try {
+    // Verificar que hay configuración antes de intentar conectar
+    if (!hasR2Config()) {
+      return NextResponse.json({ success: false, connected: false, error: 'No R2 configuration found' });
+    }
+
+    const r2Client = getR2Client();
+    const bucketName = getBucketName();
+    
     const command = new ListObjectsCommand({
-      Bucket: BUCKET_NAME,
+      Bucket: bucketName,
       MaxKeys: 1,
     });
     
@@ -14,7 +22,7 @@ export async function GET() {
   } catch (error) {
     console.error('Error al verificar la conexión al bucket:', error);
     return NextResponse.json(
-      { success: false, error: 'Error al conectar con R2', details: error },
+      { success: false, connected: false, error: 'Error al conectar con R2', details: error },
       { status: 500 }
     );
   }

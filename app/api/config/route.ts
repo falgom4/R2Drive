@@ -7,11 +7,11 @@ export async function POST(request: Request) {
     const { accountId, accessKeyId, secretAccessKey, bucketName, publicUrl } = await request.json();
 
     // Crear el contenido del archivo .env.local
-    const envContent = `CLOUDFLARE_ACCOUNT_ID=${accountId}
-CLOUDFLARE_ACCESS_KEY_ID=${accessKeyId}
-CLOUDFLARE_SECRET_ACCESS_KEY=${secretAccessKey}
-CLOUDFLARE_R2_BUCKET=${bucketName}
-${publicUrl ? `CLOUDFLARE_R2_PUBLIC_URL=${publicUrl}` : ''}`;
+    const envContent = `R2_ACCOUNT_ID=${accountId}
+R2_ACCESS_KEY_ID=${accessKeyId}
+R2_SECRET_ACCESS_KEY=${secretAccessKey}
+R2_BUCKET_NAME=${bucketName}
+${publicUrl ? `R2_PUBLIC_URL=${publicUrl}` : ''}`;
 
     // Escribir el archivo .env.local
     const envPath = path.join(process.cwd(), '.env.local');

@@ -1,9 +1,20 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { r2Client, BUCKET_NAME } from '@/app/lib/r2-server';
+import { getR2Client, getBucketName, hasR2Config } from '@/app/lib/r2-server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
+    // Verificar que hay configuración antes de intentar conectar
+    if (!hasR2Config()) {
+      return NextResponse.json(
+        { success: false, error: 'No R2 configuration found' },
+        { status: 500 }
+      );
+    }
+
+    const r2Client = getR2Client();
+    const bucketName = getBucketName();
+    
     const formData = await request.formData();
     const file = formData.get('file') as File;
     let path = formData.get('path') as string;
@@ -36,7 +47,7 @@ export async function POST(request: NextRequest) {
     const fileBuffer = await file.arrayBuffer();
     
     const command = new PutObjectCommand({
-      Bucket: BUCKET_NAME,
+      Bucket: bucketName,
       Key: key,
       Body: new Uint8Array(fileBuffer),
       ContentType: file.type,

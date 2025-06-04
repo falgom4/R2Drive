@@ -53,8 +53,14 @@ export default function Home() {
 
         const result = await verifyBucketConnection();
         setIsBucketConnected(result);
+        
+        // Si no hay conexión, mostrar modal de configuración
+        if (!result) {
+          setShowConfigModal(true);
+        }
       } catch (err) {
         setIsBucketConnected(false);
+        setShowConfigModal(true);
         console.error('Error al verificar la configuración:', err);
       }
     };
@@ -356,7 +362,17 @@ export default function Home() {
       }
 
       setShowConfigModal(false);
-      window.location.reload(); // Recargar para aplicar la nueva configuración
+      
+      // Verificar la nueva conexión automáticamente
+      setIsBucketConnected(null); // Mostrar estado de verificando
+      const result = await verifyBucketConnection();
+      setIsBucketConnected(result);
+      
+      if (result) {
+        setError(null); // Limpiar cualquier error previo
+      } else {
+        setError('No se pudo conectar con las nuevas credenciales');
+      }
     } catch (error) {
       console.error('Error:', error);
       setError('Error al guardar la configuración');
@@ -414,6 +430,18 @@ export default function Home() {
                 
                 <button 
                   className="flex w-full items-center gap-3 px-4 py-2.5 text-sm rounded-md hover:bg-[var(--app-surface-hover)] text-[var(--app-text-primary)]"
+                  onClick={() => {
+                    setShowSettingsMenu(false);
+                    setShowConfigModal(true);
+                  }}
+                  role="menuitem"
+                >
+                  <Settings className="w-4 h-4 text-[var(--primary)]" aria-hidden="true" />
+                  <span>Configurar credenciales</span>
+                </button>
+                
+                <button 
+                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm rounded-md hover:bg-[var(--app-surface-hover)] text-[var(--app-text-primary)]"
                   onClick={refreshConnection}
                   role="menuitem"
                 >
@@ -462,10 +490,14 @@ export default function Home() {
               </div>
             )}
             {isBucketConnected === false && (
-              <div className="app-badge app-badge-error flex items-center gap-3">
+              <button 
+                className="app-badge app-badge-error flex items-center gap-3 cursor-pointer hover:bg-[rgba(239,68,68,0.2)] transition-colors duration-200"
+                onClick={() => setShowConfigModal(true)}
+                aria-label="Configure bucket connection"
+              >
                 <WifiOff className="w-4 h-4" aria-hidden="true" />
-                <span>No bucket connection</span>
-              </div>
+                <span>No bucket connection - Click to configure</span>
+              </button>
             )}
             {isBucketConnected === null && (
               <div className="app-badge app-badge-warning flex items-center gap-3 animate-pulse" aria-live="polite">

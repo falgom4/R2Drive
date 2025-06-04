@@ -1,9 +1,20 @@
 import { DeleteObjectCommand, ListObjectsV2Command } from '@aws-sdk/client-s3';
-import { r2Client, BUCKET_NAME } from '@/app/lib/r2-server';
+import { getR2Client, getBucketName, hasR2Config } from '@/app/lib/r2-server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function DELETE(request: NextRequest) {
   try {
+    // Verificar que hay configuración antes de intentar conectar
+    if (!hasR2Config()) {
+      return NextResponse.json(
+        { success: false, error: 'No R2 configuration found' },
+        { status: 500 }
+      );
+    }
+
+    const r2Client = getR2Client();
+    const bucketName = getBucketName();
+    
     const { key, isFolder } = await request.json();
     
     if (!key) {
@@ -22,7 +33,7 @@ export async function DELETE(request: NextRequest) {
       
       // Listar todos los objetos dentro de la carpeta
       const listCommand = new ListObjectsV2Command({
-        Bucket: BUCKET_NAME,
+        Bucket: bucketName,
         Prefix: folderPath,
       });
       
@@ -33,7 +44,7 @@ export async function DELETE(request: NextRequest) {
         for (const object of listedObjects.Contents) {
           if (object.Key) {
             const deleteCommand = new DeleteObjectCommand({
-              Bucket: BUCKET_NAME,
+              Bucket: bucketName,
               Key: object.Key,
             });
             
@@ -46,7 +57,7 @@ export async function DELETE(request: NextRequest) {
       // También intentar eliminar el marcador de carpeta si existe
       try {
         const deleteCommand = new DeleteObjectCommand({
-          Bucket: BUCKET_NAME,
+          Bucket: bucketName,
           Key: folderPath,
         });
         
@@ -63,7 +74,7 @@ export async function DELETE(request: NextRequest) {
     } else {
       // Es un archivo individual
       const deleteCommand = new DeleteObjectCommand({
-        Bucket: BUCKET_NAME,
+        Bucket: bucketName,
         Key: key,
       });
       
