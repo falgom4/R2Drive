@@ -6,6 +6,7 @@ import * as Dialog from '@radix-ui/react-dialog';
 import * as Progress from '@radix-ui/react-progress';
 import { uploadDirectory, verifyBucketConnection, UploadProgress, uploadFile } from './lib/upload';
 import BucketExplorer from './components/BucketExplorer';
+import ConfigurationModal from './components/ConfigurationModal';
 
 interface FileWithPath {
   file: File;
@@ -37,20 +38,29 @@ export default function Home() {
   const [showSettingsMenu, setShowSettingsMenu] = useState(false);
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const settingsMenuRef = useRef<HTMLDivElement>(null);
+  const [showConfigModal, setShowConfigModal] = useState(false);
 
-  // Verificar la conexión al bucket al cargar
+  // Verificar la conexión al bucket y la existencia de .env.local al cargar
   useEffect(() => {
-    const checkConnection = async () => {
+    const checkConfiguration = async () => {
       try {
+        const response = await fetch('/api/config/check');
+        const { hasConfig } = await response.json();
+        
+        if (!hasConfig) {
+          setShowConfigModal(true);
+          return;
+        }
+
         const result = await verifyBucketConnection();
         setIsBucketConnected(result);
       } catch (err) {
         setIsBucketConnected(false);
-        console.error('Error al verificar la conexión:', err);
+        console.error('Error al verificar la configuración:', err);
       }
     };
     
-    checkConnection();
+    checkConfiguration();
   }, []);
 
   // Manejar cuando se arrastra un archivo
@@ -325,6 +335,34 @@ export default function Home() {
     // Close settings menu
     setShowSettingsMenu(false);
   }, []);
+
+  const handleSaveConfig = async (config: {
+    accountId: string;
+    accessKeyId: string;
+    secretAccessKey: string;
+    bucketName: string;
+    publicUrl?: string;
+  }) => {
+    try {
+      const response = await fetch('/api/config', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(config),
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al guardar la configuración');
+      }
+
+      setShowConfigModal(false);
+      window.location.reload(); // Recargar para aplicar la nueva configuración
+    } catch (error) {
+      console.error('Error:', error);
+      setError('Error al guardar la configuración');
+    }
+  };
 
   return (
     <div className="min-h-screen">
@@ -639,6 +677,12 @@ export default function Home() {
           </Dialog.Portal>
         </Dialog.Root>
       )}
+
+      <ConfigurationModal
+        isOpen={showConfigModal}
+        onClose={() => setShowConfigModal(false)}
+        onSave={handleSaveConfig}
+      />
     </div>
   );
 }
