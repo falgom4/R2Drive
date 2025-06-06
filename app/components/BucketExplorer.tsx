@@ -1,8 +1,8 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { File, ChevronLeft, RefreshCw, Loader2, FolderOpen, Home, Trash2, MoreHorizontal, Check, X, Cloud, Download } from 'lucide-react';
-import { listBucketObjects, BucketListResponse, deleteObject } from '../lib/upload';
+import { File, ChevronLeft, RefreshCw, Loader2, FolderOpen, Home, Trash2, MoreHorizontal, Check, X, Cloud, Download, FolderPlus } from 'lucide-react';
+import { listBucketObjects, BucketListResponse, deleteObject, createFolder } from '../lib/upload';
 import * as Dialog from '@radix-ui/react-dialog';
 
 // Función para formatear el tamaño de archivo
@@ -45,6 +45,9 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
     items: []
   });
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
+  const [createFolderDialog, setCreateFolderDialog] = useState(false);
+  const [newFolderName, setNewFolderName] = useState('');
+  const [isCreatingFolder, setIsCreatingFolder] = useState(false);
 
   const loadBucketContents = async (prefix: string = '') => {
     setLoading(true);
@@ -181,6 +184,26 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
     }
   };
 
+  // Crear nueva carpeta
+  const handleCreateFolder = async () => {
+    if (!newFolderName.trim()) return;
+    
+    setIsCreatingFolder(true);
+    setError(null);
+    
+    try {
+      await createFolder(newFolderName.trim(), currentPrefix);
+      setCreateFolderDialog(false);
+      setNewFolderName('');
+      refreshContents();
+    } catch (err) {
+      setError('Error al crear la carpeta. Por favor, intenta de nuevo.');
+      console.error('Error al crear carpeta:', err);
+    } finally {
+      setIsCreatingFolder(false);
+    }
+  };
+
   return (
     <div className="app-card">
       {/* Header del explorador */}
@@ -193,6 +216,16 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
           {loading && <Loader2 className="w-5 h-5 animate-spin ml-3" aria-hidden="true" />}
         </div>
         <div className="flex items-center gap-4">
+          <button 
+            className="app-button-primary flex items-center gap-2 py-2 px-4 text-sm"
+            onClick={() => setCreateFolderDialog(true)}
+            title="Create new folder"
+            aria-label="Crear nueva carpeta"
+          >
+            <FolderPlus className="w-4 h-4" aria-hidden="true" />
+            <span>New Folder</span>
+          </button>
+          
           {selectedItems.size > 0 && (
             <button 
               className="app-button-danger flex items-center gap-2 py-2 px-4 text-sm"
@@ -636,6 +669,96 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                     <>
                       <Trash2 className="w-5 h-5" aria-hidden="true" />
                       <span>Delete</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+      
+      {/* Diálogo para crear carpeta */}
+      <Dialog.Root 
+        open={createFolderDialog} 
+        onOpenChange={(open) => {
+          if (!open) {
+            setCreateFolderDialog(false);
+            setNewFolderName('');
+          }
+        }}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
+          <Dialog.Content 
+            className="fixed p-0 rounded-xl shadow-2xl w-full max-w-md app-card" 
+            style={{
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
+            aria-labelledby="create-folder-dialog-title"
+            aria-describedby="create-folder-dialog-description"
+          >
+            <div className="px-6 py-5 border-b border-[var(--app-border)] bg-[var(--app-bg-light)]">
+              <Dialog.Title id="create-folder-dialog-title" className="text-lg font-semibold text-[var(--app-text-primary)] flex items-center gap-3">
+                <FolderPlus className="w-5 h-5 text-[var(--primary)]" aria-hidden="true" />
+                Create New Folder
+              </Dialog.Title>
+            </div>
+            <div className="p-8">
+              <Dialog.Description id="create-folder-dialog-description" className="text-[var(--app-text-secondary)] mb-6">
+                Create a new folder in the current directory: <span className="font-mono text-[var(--primary)]">{currentPrefix || '/'}</span>
+              </Dialog.Description>
+              
+              <div className="mb-8">
+                <label htmlFor="folder-name" className="block text-sm font-medium text-[var(--app-text-primary)] mb-3">
+                  Folder name
+                </label>
+                <input
+                  id="folder-name"
+                  type="text"
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  placeholder="Enter folder name"
+                  className="w-full px-4 py-3 border border-[var(--app-border)] rounded-lg bg-[var(--app-surface)] text-[var(--app-text-primary)] placeholder-[var(--app-text-disabled)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && newFolderName.trim() && !isCreatingFolder) {
+                      handleCreateFolder();
+                    }
+                  }}
+                  autoFocus
+                />
+              </div>
+              
+              <div className="flex justify-end gap-4">
+                <button
+                  className="app-button-secondary flex items-center gap-3"
+                  onClick={() => {
+                    setCreateFolderDialog(false);
+                    setNewFolderName('');
+                  }}
+                  disabled={isCreatingFolder}
+                  aria-label="Cancelar creación de carpeta"
+                >
+                  <X className="w-5 h-5" aria-hidden="true" />
+                  <span>Cancel</span>
+                </button>
+                <button
+                  className="app-button-primary flex items-center gap-3"
+                  onClick={handleCreateFolder}
+                  disabled={!newFolderName.trim() || isCreatingFolder}
+                  aria-label="Crear carpeta"
+                >
+                  {isCreatingFolder ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
+                      <span>Creating...</span>
+                    </>
+                  ) : (
+                    <>
+                      <FolderPlus className="w-5 h-5" aria-hidden="true" />
+                      <span>Create</span>
                     </>
                   )}
                 </button>

@@ -320,6 +320,30 @@ export async function uploadDirectory(
   return uploadedFiles;
 }
 
+// Función para crear una carpeta en el bucket
+export async function createFolder(folderName: string, prefix: string = ''): Promise<string> {
+  try {
+    const response = await fetch('/api/r2/create-folder', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ folderName, prefix }),
+    });
+    
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Error al crear carpeta');
+    }
+    
+    const data = await response.json();
+    return data.folderPath;
+  } catch (error) {
+    console.error('Error al crear carpeta:', error);
+    throw error;
+  }
+}
+
 // Función para eliminar un objeto del bucket (archivo o carpeta)
 export async function deleteObject(key: string, isFolder: boolean): Promise<boolean> {
   try {
