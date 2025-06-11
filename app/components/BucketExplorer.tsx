@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { File, ChevronLeft, RefreshCw, Loader2, FolderOpen, Home, Trash2, MoreHorizontal, Check, X, Cloud, Download, FolderPlus } from 'lucide-react';
+import { File, ChevronLeft, RefreshCw, Loader2, FolderOpen, Home, Trash2, MoreHorizontal, Check, X, Cloud, Download, FolderPlus, Edit2 } from 'lucide-react';
 import { listBucketObjects, BucketListResponse, deleteObject, createFolder } from '../lib/upload';
 import * as Dialog from '@radix-ui/react-dialog';
 
@@ -48,6 +48,13 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
   const [createFolderDialog, setCreateFolderDialog] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+  const [renameFolderDialog, setRenameFolderDialog] = useState<{isOpen: boolean, folderPrefix: string, folderName: string}>({
+    isOpen: false,
+    folderPrefix: '',
+    folderName: ''
+  });
+  const [newRenameFolderName, setNewRenameFolderName] = useState('');
+  const [isRenamingFolder, setIsRenamingFolder] = useState(false);
 
   const loadBucketContents = async (prefix: string = '') => {
     setLoading(true);
@@ -201,6 +208,52 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
       console.error('Error al crear carpeta:', err);
     } finally {
       setIsCreatingFolder(false);
+    }
+  };
+
+  // Mostrar diálogo para renombrar carpeta
+  const handleRenameClick = (folderPrefix: string, folderName: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    setRenameFolderDialog({
+      isOpen: true,
+      folderPrefix,
+      folderName
+    });
+    setNewRenameFolderName(folderName);
+  };
+
+  // Renombrar carpeta
+  const handleRenameFolder = async () => {
+    if (!newRenameFolderName.trim() || newRenameFolderName.trim() === renameFolderDialog.folderName) return;
+    
+    setIsRenamingFolder(true);
+    setError(null);
+    
+    try {
+      const response = await fetch('/api/r2/rename', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          oldPrefix: renameFolderDialog.folderPrefix,
+          newPrefix: currentPrefix + newRenameFolderName.trim() + '/'
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.details || 'Error al renombrar carpeta');
+      }
+
+      setRenameFolderDialog({ isOpen: false, folderPrefix: '', folderName: '' });
+      setNewRenameFolderName('');
+      refreshContents();
+    } catch (err) {
+      setError('Error al renombrar la carpeta. Por favor, intenta de nuevo.');
+      console.error('Error al renombrar carpeta:', err);
+    } finally {
+      setIsRenamingFolder(false);
     }
   };
 
@@ -413,14 +466,24 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                       <td>-</td>
                       <td>-</td>
                       <td>
-                        <button 
-                          className="navigation-button p-2 rounded-full w-8 h-8"
-                          onClick={() => navigateToFolder(folder.prefix)}
-                          title="Open folder"
-                          aria-label={`Abrir carpeta ${folder.name}`}
-                        >
-                          <ChevronLeft className="w-4 h-4 rotate-180" aria-hidden="true" />
-                        </button>
+                        <div className="flex items-center gap-1">
+                          <button 
+                            className="navigation-button p-2 rounded-full w-8 h-8"
+                            onClick={(e) => handleRenameClick(folder.prefix, folder.name, e)}
+                            title="Rename folder"
+                            aria-label={`Renombrar carpeta ${folder.name}`}
+                          >
+                            <Edit2 className="w-4 h-4" aria-hidden="true" />
+                          </button>
+                          <button 
+                            className="navigation-button p-2 rounded-full w-8 h-8"
+                            onClick={() => navigateToFolder(folder.prefix)}
+                            title="Open folder"
+                            aria-label={`Abrir carpeta ${folder.name}`}
+                          >
+                            <ChevronLeft className="w-4 h-4 rotate-180" aria-hidden="true" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
@@ -537,6 +600,14 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                             ? <Check className="w-4 h-4" aria-hidden="true" /> 
                             : <MoreHorizontal className="w-4 h-4" aria-hidden="true" />
                           }
+                        </button>
+                        <button
+                          className="absolute -bottom-2 -right-2 p-2 rounded-full shadow-sm navigation-button transition-transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-[var(--primary)]"
+                          onClick={(e) => handleRenameClick(folder.prefix, folder.name, e)}
+                          title="Rename folder"
+                          aria-label={`Renombrar carpeta ${folder.name}`}
+                        >
+                          <Edit2 className="w-4 h-4" aria-hidden="true" />
                         </button>
                       </div>
                       <span className="mt-4 text-center truncate w-full">
@@ -759,6 +830,96 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                     <>
                       <FolderPlus className="w-5 h-5" aria-hidden="true" />
                       <span>Create</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </Dialog.Content>
+        </Dialog.Portal>
+      </Dialog.Root>
+      
+      {/* Diálogo para renombrar carpeta */}
+      <Dialog.Root 
+        open={renameFolderDialog.isOpen} 
+        onOpenChange={(open) => {
+          if (!open) {
+            setRenameFolderDialog({ isOpen: false, folderPrefix: '', folderName: '' });
+            setNewRenameFolderName('');
+          }
+        }}
+      >
+        <Dialog.Portal>
+          <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
+          <Dialog.Content 
+            className="fixed p-0 rounded-xl shadow-2xl w-full max-w-md app-card" 
+            style={{
+              left: '50%',
+              top: '50%',
+              transform: 'translate(-50%, -50%)'
+            }}
+            aria-labelledby="rename-folder-dialog-title"
+            aria-describedby="rename-folder-dialog-description"
+          >
+            <div className="px-6 py-5 border-b border-[var(--app-border)] bg-[var(--app-bg-light)]">
+              <Dialog.Title id="rename-folder-dialog-title" className="text-lg font-semibold text-[var(--app-text-primary)] flex items-center gap-3">
+                <Edit2 className="w-5 h-5 text-[var(--primary)]" aria-hidden="true" />
+                Rename Folder
+              </Dialog.Title>
+            </div>
+            <div className="p-8">
+              <Dialog.Description id="rename-folder-dialog-description" className="text-[var(--app-text-secondary)] mb-6">
+                Renaming folder: <span className="font-mono text-[var(--primary)]">{renameFolderDialog.folderName}/</span>
+              </Dialog.Description>
+              
+              <div className="mb-8">
+                <label htmlFor="rename-folder-name" className="block text-sm font-medium text-[var(--app-text-primary)] mb-3">
+                  New folder name
+                </label>
+                <input
+                  id="rename-folder-name"
+                  type="text"
+                  value={newRenameFolderName}
+                  onChange={(e) => setNewRenameFolderName(e.target.value)}
+                  placeholder="Enter new folder name"
+                  className="w-full px-4 py-3 border border-[var(--app-border)] rounded-lg bg-[var(--app-surface)] text-[var(--app-text-primary)] placeholder-[var(--app-text-disabled)] focus:outline-none focus:ring-2 focus:ring-[var(--primary)] focus:border-transparent"
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && newRenameFolderName.trim() && newRenameFolderName.trim() !== renameFolderDialog.folderName && !isRenamingFolder) {
+                      handleRenameFolder();
+                    }
+                  }}
+                  autoFocus
+                />
+              </div>
+              
+              <div className="flex justify-end gap-4">
+                <button
+                  className="app-button-secondary flex items-center gap-3"
+                  onClick={() => {
+                    setRenameFolderDialog({ isOpen: false, folderPrefix: '', folderName: '' });
+                    setNewRenameFolderName('');
+                  }}
+                  disabled={isRenamingFolder}
+                  aria-label="Cancelar renombrado de carpeta"
+                >
+                  <X className="w-5 h-5" aria-hidden="true" />
+                  <span>Cancel</span>
+                </button>
+                <button
+                  className="app-button-primary flex items-center gap-3"
+                  onClick={handleRenameFolder}
+                  disabled={!newRenameFolderName.trim() || newRenameFolderName.trim() === renameFolderDialog.folderName || isRenamingFolder}
+                  aria-label="Renombrar carpeta"
+                >
+                  {isRenamingFolder ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" aria-hidden="true" />
+                      <span>Renaming...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Edit2 className="w-5 h-5" aria-hidden="true" />
+                      <span>Rename</span>
                     </>
                   )}
                 </button>

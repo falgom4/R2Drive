@@ -1,4 +1,4 @@
-import { S3Client } from '@aws-sdk/client-s3';
+import { S3Client, ListObjectsV2Command, CopyObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
 
 // Función para obtener las credenciales R2
 function getR2Config() {
@@ -46,6 +46,56 @@ export function getR2Client(): S3Client {
 export function getBucketName(): string {
   const config = getR2Config();
   return config.R2_BUCKET_NAME;
+}
+
+// Función para renombrar una carpeta
+export async function renameFolder(oldPrefix: string, newPrefix: string): Promise<void> {
+  const r2Client = getR2Client();
+  const bucketName = getBucketName();
+
+  // Asegurar que los prefijos terminen en '/'
+  const oldFolderPrefix = oldPrefix.endsWith('/') ? oldPrefix : oldPrefix + '/';
+  const newFolderPrefix = newPrefix.endsWith('/') ? newPrefix : newPrefix + '/';
+
+  // Listar todos los objetos en la carpeta
+  const listCommand = new ListObjectsV2Command({
+    Bucket: bucketName,
+    Prefix: oldFolderPrefix,
+  });
+
+  const listResponse = await r2Client.send(listCommand);
+  
+  if (!listResponse.Contents || listResponse.Contents.length === 0) {
+    throw new Error('Carpeta no encontrada o vacía');
+  }
+
+  // Copiar cada objeto a la nueva ubicación
+  for (const object of listResponse.Contents) {
+    if (!object.Key) continue;
+
+    const newKey = object.Key.replace(oldFolderPrefix, newFolderPrefix);
+    
+    // Copiar el objeto
+    const copyCommand = new CopyObjectCommand({
+      Bucket: bucketName,
+      CopySource: `${bucketName}/${object.Key}`,
+      Key: newKey,
+    });
+
+    await r2Client.send(copyCommand);
+  }
+
+  // Eliminar los objetos originales
+  for (const object of listResponse.Contents) {
+    if (!object.Key) continue;
+
+    const deleteCommand = new DeleteObjectCommand({
+      Bucket: bucketName,
+      Key: object.Key,
+    });
+
+    await r2Client.send(deleteCommand);
+  }
 }
 
 // Para compatibilidad hacia atrás - NO USAR, usar las funciones directamente
