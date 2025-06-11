@@ -858,19 +858,18 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
               top: '50%',
               transform: 'translate(-50%, -50%)'
             }}
-            aria-labelledby="rename-folder-dialog-title"
-            aria-describedby="rename-folder-dialog-description"
           >
+            <Dialog.Title className="sr-only">Rename Folder</Dialog.Title>
             <div className="px-6 py-5 border-b border-[var(--app-border)] bg-[var(--app-bg-light)]">
-              <Dialog.Title id="rename-folder-dialog-title" className="text-lg font-semibold text-[var(--app-text-primary)] flex items-center gap-3">
+              <h2 className="text-lg font-semibold text-[var(--app-text-primary)] flex items-center gap-3">
                 <Edit2 className="w-5 h-5 text-[var(--primary)]" aria-hidden="true" />
                 Rename Folder
-              </Dialog.Title>
+              </h2>
             </div>
             <div className="p-8">
-              <Dialog.Description id="rename-folder-dialog-description" className="text-[var(--app-text-secondary)] mb-6">
+              <p className="text-[var(--app-text-secondary)] mb-6">
                 Renaming folder: <span className="font-mono text-[var(--primary)]">{renameFolderDialog.folderName}/</span>
-              </Dialog.Description>
+              </p>
               
               <div className="mb-8">
                 <label htmlFor="rename-folder-name" className="block text-sm font-medium text-[var(--app-text-primary)] mb-3">
