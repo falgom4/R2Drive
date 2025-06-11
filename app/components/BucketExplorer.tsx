@@ -690,20 +690,21 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
               top: '50%',
               transform: 'translate(-50%, -50%)'
             }}
-            aria-labelledby="delete-dialog-title"
-            aria-describedby="delete-dialog-description"
           >
+            <Dialog.Title className="sr-only">Confirm Deletion</Dialog.Title>
             <div className="px-6 py-5 border-b border-[var(--app-border)] bg-[rgba(239,68,68,0.1)]">
-              <Dialog.Title id="delete-dialog-title" className="text-lg font-semibold text-[var(--error)] flex items-center gap-3">
+              <h2 className="text-lg font-semibold text-[var(--error)] flex items-center gap-3">
                 <Trash2 className="w-5 h-5" aria-hidden="true" />
                 Confirm Deletion
-              </Dialog.Title>
+              </h2>
             </div>
             <div className="p-8">
-              <Dialog.Description id="delete-dialog-description" className="text-[var(--app-text-primary)] mb-8">
-                Are you sure you want to delete {confirmDelete.items.length} item(s)? This action cannot be undone.
+              <div>
+                <p className="text-[var(--app-text-primary)] mb-6">
+                  Are you sure you want to delete {confirmDelete.items.length} item(s)? This action cannot be undone.
+                </p>
                 
-                <div className="mt-6 bg-[var(--app-surface)] rounded-lg p-5 max-h-48 overflow-y-auto">
+                <div className="mb-8 bg-[var(--app-surface)] rounded-lg p-5 max-h-48 overflow-y-auto">
                   <ul className="list-disc pl-6 space-y-2">
                     {confirmDelete.items.map((item, index) => (
                       <li key={index} className="text-sm">
@@ -714,7 +715,7 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
                     ))}
                   </ul>
                 </div>
-              </Dialog.Description>
+              </div>
               <div className="flex justify-end gap-4">
                 <button
                   className="app-button-secondary flex items-center gap-3"
@@ -768,19 +769,18 @@ export default function BucketExplorer({ onSelectFolder }: BucketExplorerProps) 
               top: '50%',
               transform: 'translate(-50%, -50%)'
             }}
-            aria-labelledby="create-folder-dialog-title"
-            aria-describedby="create-folder-dialog-description"
           >
+            <Dialog.Title className="sr-only">Create New Folder</Dialog.Title>
             <div className="px-6 py-5 border-b border-[var(--app-border)] bg-[var(--app-bg-light)]">
-              <Dialog.Title id="create-folder-dialog-title" className="text-lg font-semibold text-[var(--app-text-primary)] flex items-center gap-3">
+              <h2 className="text-lg font-semibold text-[var(--app-text-primary)] flex items-center gap-3">
                 <FolderPlus className="w-5 h-5 text-[var(--primary)]" aria-hidden="true" />
                 Create New Folder
-              </Dialog.Title>
+              </h2>
             </div>
             <div className="p-8">
-              <Dialog.Description id="create-folder-dialog-description" className="text-[var(--app-text-secondary)] mb-6">
+              <p className="text-[var(--app-text-secondary)] mb-6">
                 Create a new folder in the current directory: <span className="font-mono text-[var(--primary)]">{currentPrefix || '/'}</span>
-              </Dialog.Description>
+              </p>
               
               <div className="mb-8">
                 <label htmlFor="folder-name" className="block text-sm font-medium text-[var(--app-text-primary)] mb-3">

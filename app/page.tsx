@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useCallback, useEffect, useRef } from 'react';
-import { Upload, Check, AlertCircle, Wifi, WifiOff, Cloud, Shield, Settings, XCircle, ArrowUp, Loader2, Sun, Moon, LogOut, RefreshCw } from 'lucide-react';
+import { Upload, Check, AlertCircle, Wifi, WifiOff, Cloud, Shield, Settings, XCircle, ArrowUp, Loader2, Sun, Moon, LogOut, RefreshCw, Heart, Languages } from 'lucide-react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { uploadDirectory, verifyBucketConnection, UploadProgress, uploadFile } from './lib/upload';
 import BucketExplorer from './components/BucketExplorer';
 import ConfigurationModal from './components/ConfigurationModal';
+import { useLanguage } from './contexts/LanguageContext';
 
 interface FileWithPath {
   file: File;
@@ -21,6 +22,7 @@ interface CustomUploadProgress {
 }
 
 export default function Home() {
+  const { language, setLanguage, t } = useLanguage();
   const [isDragging, setIsDragging] = useState(false);
   const [isBucketConnected, setIsBucketConnected] = useState<boolean | null>(null);
   const [showExplorer, setShowExplorer] = useState(false);
@@ -425,7 +427,16 @@ export default function Home() {
                     ? <Sun className="w-4 h-4 text-[var(--secondary)]" aria-hidden="true" /> 
                     : <Moon className="w-4 h-4 text-[var(--secondary)]" aria-hidden="true" />
                   }
-                  <span>{theme === 'dark' ? 'Cambiar a tema claro' : 'Cambiar a tema oscuro'}</span>
+                  <span>{theme === 'dark' ? t.lightMode : t.darkMode}</span>
+                </button>
+                
+                <button 
+                  className="flex w-full items-center gap-3 px-4 py-2.5 text-sm rounded-md hover:bg-[var(--app-surface-hover)] text-[var(--app-text-primary)]"
+                  onClick={() => setLanguage(language === 'en' ? 'es' : 'en')}
+                  role="menuitem"
+                >
+                  <Languages className="w-4 h-4 text-[var(--primary)]" aria-hidden="true" />
+                  <span>{t.language}: {language === 'en' ? t.spanish : t.english}</span>
                 </button>
                 
                 <button 
@@ -437,7 +448,7 @@ export default function Home() {
                   role="menuitem"
                 >
                   <Settings className="w-4 h-4 text-[var(--primary)]" aria-hidden="true" />
-                  <span>Configurar credenciales</span>
+                  <span>{t.configureCredentials}</span>
                 </button>
                 
                 <button 
@@ -446,7 +457,7 @@ export default function Home() {
                   role="menuitem"
                 >
                   <RefreshCw className="w-4 h-4 text-[var(--primary)]" aria-hidden="true" />
-                  <span>Actualizar conexión</span>
+                  <span>{t.refreshConnection}</span>
                 </button>
                 
                 <div className="border-t border-[var(--app-border)] my-1"></div>
@@ -460,7 +471,7 @@ export default function Home() {
                   role="menuitem"
                 >
                   <LogOut className="w-4 h-4" aria-hidden="true" />
-                  <span>Cerrar sesión</span>
+                  <span>{t.logout}</span>
                 </button>
               </div>
             )}
@@ -475,10 +486,10 @@ export default function Home() {
               <Shield className="w-12 h-12 text-[var(--primary)]" aria-hidden="true" />
             </div>
             <h1 className="text-4xl font-bold mb-4">
-              R2Drive
+              {t.appName}
             </h1>
             <p className="text-[var(--app-text-secondary)] max-w-lg mx-auto px-4">
-              Secure file management for Cloudflare R2. Fast, reliable, and intuitive.
+              {t.welcomeSubtitle}
             </p>
           </div>
           
@@ -486,7 +497,7 @@ export default function Home() {
             {isBucketConnected === true && (
               <div className="app-badge app-badge-success flex items-center gap-3">
                 <Wifi className="w-4 h-4" aria-hidden="true" />
-                <span>Connected to bucket</span>
+                <span>{t.connected}</span>
               </div>
             )}
             {isBucketConnected === false && (
@@ -514,7 +525,7 @@ export default function Home() {
               aria-expanded={showExplorer}
               aria-controls="bucket-explorer"
             >
-              {showExplorer ? 'Hide explorer' : 'Show bucket explorer'}
+              {showExplorer ? 'Hide explorer' : t.showBucketExplorer}
             </button>
           </div>
         </div>
@@ -554,13 +565,13 @@ export default function Home() {
                   </div>
                   
                   <div className="text-center">
-                    <h2 className="text-2xl font-medium mb-2">Upload files to R2</h2>
+                    <h2 className="text-2xl font-medium mb-2">{t.uploadFiles}</h2>
                     <p className="text-[var(--app-text-secondary)] mb-6">
-                      Drag and drop files here, or click to browse
+                      {t.dragDropText}
                     </p>
                     
                     <label className="app-button-primary cursor-pointer">
-                      <span>Browse files</span>
+                      <span>{t.browseFiles}</span>
                       <input 
                         type="file" 
                         className="sr-only" 
@@ -581,7 +592,7 @@ export default function Home() {
                   
                   <div className="text-center w-full">
                     <h3 className="text-xl font-medium mb-2">
-                      Uploading files...
+                      {t.uploadingFiles}
                     </h3>
                     <p className="text-[var(--app-text-secondary)] mb-4">
                       {uploadProgress.completed} of {uploadProgress.total} files completed
@@ -609,7 +620,7 @@ export default function Home() {
                   
                   <div className="text-center">
                     <h3 className="text-2xl font-medium text-[var(--success)] mb-3">
-                      Upload completed!
+                      {t.uploadComplete}!
                     </h3>
                     <p className="text-[var(--app-text-secondary)]">
                       {uploadedFiles.length} files uploaded to bucket
@@ -665,7 +676,9 @@ export default function Home() {
         
         {/* Pie de página */}
         <div className="text-center text-[var(--app-text-secondary)] text-sm mt-20">
-          <p>Designed for Cloudflare R2</p>
+          <p className="flex items-center justify-center gap-1">
+{t.designedWith} &nbsp;<Heart className="w-3 h-3 text-red-500 fill-current mx-1" aria-hidden="true" />&nbsp; en Qro
+          </p>
         </div>
       </main>
 
@@ -681,19 +694,18 @@ export default function Home() {
                 top: '50%',
                 transform: 'translate(-50%, -50%)'
               }}
-              aria-labelledby="error-dialog-title"
-              aria-describedby="error-dialog-description"
             >
+              <Dialog.Title className="sr-only">Error</Dialog.Title>
               <div className="px-6 py-5 border-b border-[var(--app-border)] bg-[rgba(239,68,68,0.1)]">
-                <Dialog.Title id="error-dialog-title" className="text-lg font-semibold text-[var(--error)] flex items-center gap-3">
+                <h2 className="text-lg font-semibold text-[var(--error)] flex items-center gap-3">
                   <AlertCircle className="w-5 h-5" aria-hidden="true" />
                   Error
-                </Dialog.Title>
+                </h2>
               </div>
               <div className="p-8">
-                <Dialog.Description id="error-dialog-description" className="text-[var(--app-text-primary)] mb-8">
+                <p className="text-[var(--app-text-primary)] mb-8">
                   {error}
-                </Dialog.Description>
+                </p>
                 <div className="flex justify-end">
                   <button
                     className="app-button-primary"
