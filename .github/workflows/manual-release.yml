@@ -91,19 +91,21 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      - name: clean npm cache
-        run: npm cache clean --force
-
-      - name: install frontend dependencies (Windows)
-        if: matrix.platform == 'windows-latest'
+      - name: try multiple npm registries
         run: |
-          npm config set registry https://registry.npmjs.org/
-          npm install --retry=5 --timeout=300000
-        
-      - name: install frontend dependencies (Unix)
-        if: matrix.platform != 'windows-latest'
-        run: |
-          npm ci --retry=3 --timeout=60000
+          # Try Taobao registry first (usually faster in CI)
+          echo "Trying Taobao registry..."
+          npm config set registry https://registry.npmmirror.com
+          npm install --no-audit --prefer-offline || {
+            echo "Taobao failed, trying npmjs.org..."
+            npm config set registry https://registry.npmjs.org
+            npm install --no-audit --prefer-offline || {
+              echo "npm failed, trying yarn..."
+              npm install -g yarn
+              yarn config set registry https://registry.yarnpkg.com
+              yarn install --ignore-engines --network-timeout 300000
+            }
+          }
 
       - uses: tauri-apps/tauri-action@v0
         env:
