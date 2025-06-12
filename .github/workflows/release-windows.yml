@@ -1,4 +1,4 @@
-name: Manual Release
+name: Windows Release
 
 on:
   workflow_dispatch:
@@ -7,11 +7,6 @@ on:
         description: 'Version number (e.g., 0.1.0)'
         required: true
         default: '0.1.0'
-      prerelease:
-        description: 'Is this a pre-release?'
-        required: false
-        default: 'false'
-        type: boolean
 
 env:
   CARGO_INCREMENTAL: 0
@@ -35,36 +30,20 @@ jobs:
             const { data } = await github.rest.repos.createRelease({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              tag_name: `v${{ github.event.inputs.version }}`,
-              name: `R2Drive v${{ github.event.inputs.version }}`,
-              body: 'Consulta el CHANGELOG.md para ver las novedades de esta versión.',
+              tag_name: `v${{ github.event.inputs.version }}-windows`,
+              name: `R2Drive v${{ github.event.inputs.version }} (Windows)`,
+              body: 'Build específico para Windows - Consulta el CHANGELOG.md para ver las novedades.',
               draft: true,
-              prerelease: ${{ github.event.inputs.prerelease }}
+              prerelease: false
             })
             return data.id
 
-  build-tauri:
+  build-windows:
     needs: create-release
     permissions:
       contents: write
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - platform: 'macos-latest'
-            args: '--target aarch64-apple-darwin'
-            target: 'aarch64-apple-darwin'
-          - platform: 'macos-latest'
-            args: '--target x86_64-apple-darwin'
-            target: 'x86_64-apple-darwin'
-          - platform: 'ubuntu-20.04'
-            args: ''
-            target: 'x86_64-unknown-linux-gnu'
-          - platform: 'windows-latest'
-            args: ''
-            target: 'x86_64-pc-windows-msvc'
-
-    runs-on: ${{ matrix.platform }}
+    runs-on: windows-latest
+    
     steps:
       - uses: actions/checkout@v4
 
@@ -72,55 +51,52 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'npm'
-          registry-url: 'https://registry.npmjs.org'
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: ${{ matrix.target }}
-
-      - name: install dependencies (ubuntu only)
-        if: matrix.platform == 'ubuntu-20.04'
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
 
       - name: configure git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      - name: clean npm cache
-        run: npm cache clean --force
-
-      - name: install frontend dependencies (Windows)
-        if: matrix.platform == 'windows-latest'
+      - name: clear npm cache and configure
         run: |
+          npm cache clean --force
           npm config set registry https://registry.npmjs.org/
-          npm install --retry=5 --timeout=300000
-        
-      - name: install frontend dependencies (Unix)
-        if: matrix.platform != 'windows-latest'
+          npm config set fetch-retries 10
+          npm config set fetch-retry-mintimeout 10000
+          npm config set fetch-retry-maxtimeout 60000
+
+      - name: install dependencies with multiple attempts
         run: |
-          npm ci --retry=3 --timeout=60000
+          $attempt = 1
+          $maxAttempts = 3
+          do {
+            Write-Host "Attempt $attempt of $maxAttempts"
+            npm install --no-package-lock --timeout=300000
+            if ($LASTEXITCODE -eq 0) {
+              break
+            }
+            $attempt++
+            Start-Sleep 30
+          } while ($attempt -le $maxAttempts)
+        shell: pwsh
 
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           releaseId: ${{ needs.create-release.outputs.release_id }}
-          args: ${{ matrix.args }}
 
   publish-release:
     permissions:
       contents: write
     runs-on: ubuntu-latest
-    needs: [create-release, build-tauri]
+    needs: [create-release, build-windows]
 
     steps:
       - name: publish release
-        id: publish-release
         uses: actions/github-script@v7
         env:
           release_id: ${{ needs.create-release.outputs.release_id }}
@@ -131,5 +107,5 @@ jobs:
               repo: context.repo.repo,
               release_id: process.env.release_id,
               draft: false,
-              prerelease: ${{ github.event.inputs.prerelease }}
+              prerelease: false
             })
