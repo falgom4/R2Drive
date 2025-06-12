@@ -73,6 +73,7 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -85,8 +86,14 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y libgtk-3-dev libwebkit2gtk-4.0-dev libappindicator3-dev librsvg2-dev patchelf
 
+      - name: configure git
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+
       - name: install frontend dependencies
-        run: npm ci
+        run: |
+          npm ci --retry=3 --timeout=60000
 
       - uses: tauri-apps/tauri-action@v0
         env:
