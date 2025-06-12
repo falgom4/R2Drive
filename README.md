@@ -1,5 +1,25 @@
 # R2Drive - File Manager for Cloudflare R2
 
+[![npm version](https://badge.fury.io/js/r2drive.svg)](https://badge.fury.io/js/r2drive)
+[![npm downloads](https://img.shields.io/npm/dt/r2drive.svg)](https://npmjs.org/package/r2drive)
+[![GitHub stars](https://img.shields.io/github/stars/falgom4/R2Drive.svg)](https://github.com/falgom4/R2Drive/stargazers)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+**🚀 Quick Install**: `npm install -g r2drive` | **📦 NPM**: [r2drive](https://www.npmjs.com/package/r2drive)
+
+## ⚡ Quick Start
+
+```bash
+# Install globally
+npm install -g r2drive
+
+# Launch desktop app
+r2drive
+
+# Or run as web app
+npx r2drive --web
+```
+
 [English](#english) | [Español](#español)
 
 ---
@@ -25,6 +45,36 @@ R2Drive es una aplicación web moderna que te permite gestionar archivos en Clou
 - Git (para clonar el repositorio)
 
 ### Instalación
+
+#### Opción 1: Instalación Rápida con npm (Recomendada) 🚀
+
+**Instalación Global:**
+```bash
+npm install -g r2drive
+r2drive
+```
+
+**Sin instalación (usando npx):**
+```bash
+npx r2drive         # Aplicación desktop
+npx r2drive --web   # Aplicación web
+npx r2drive --dev   # Modo desarrollo
+```
+
+> 💡 **¿Qué hace el comando `r2drive`?**
+> - Detecta automáticamente tu sistema operativo
+> - Te guía para descargar el instalador apropiado (.dmg, .msi, .AppImage)
+> - Abre tu navegador en la página de descarga
+> - Proporciona instrucciones paso a paso para tu plataforma
+
+**Alternativa Web:**
+Si prefieres usar R2Drive en el navegador:
+```bash
+npx r2drive --web
+# Luego abre: http://localhost:3000
+```
+
+#### Opción 2: Instalación desde Código Fuente
 
 #### Para Windows (Instalación Completa desde Cero)
 
@@ -237,6 +287,36 @@ R2Drive is a modern web application that allows you to easily and intuitively ma
 - R2 bucket created in Cloudflare
 
 ## Installation
+
+### Option 1: Quick Install with npm (Recommended) 🚀
+
+**Global Installation:**
+```bash
+npm install -g r2drive
+r2drive
+```
+
+**Without installation (using npx):**
+```bash
+npx r2drive         # Desktop app
+npx r2drive --web   # Web app
+npx r2drive --dev   # Development mode
+```
+
+> 💡 **What does the `r2drive` command do?**
+> - Automatically detects your operating system
+> - Guides you to download the appropriate installer (.dmg, .msi, .AppImage)
+> - Opens your browser to the download page
+> - Provides step-by-step instructions for your platform
+
+**Web Alternative:**
+If you prefer to use R2Drive in the browser:
+```bash
+npx r2drive --web
+# Then open: http://localhost:3000
+```
+
+### Option 2: Install from Source Code
 
 1. Clone this repository:
    ```bash
