@@ -1,0 +1,62 @@
+# Source files
+src-tauri/target/
+.next/
+out/
+
+# Development files
+.env*
+.env.local
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Git
+.git/
+.gitignore
+
+# GitHub Actions
+.github/
+
+# Cache
+node_modules/.cache/
+.npm/
+.cache/
+
+# Test files
+coverage/
+test/
+tests/
+*.test.js
+*.test.ts
+*.spec.js
+*.spec.ts
+
+# Documentation (keep README.md but exclude others)
+docs/
+README-NPM.md
+
+# Build artifacts
+dist/
+build/
+
+# Tauri specific (keep only configs needed)
+src-tauri/gen/
+src-tauri/target/
+
+# Keep only essential files for npm
+!bin/
+!package.json
+!README.md
+!CHANGELOG.md
+!LICENSE

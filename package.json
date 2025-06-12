@@ -1,7 +1,41 @@
 {
   "name": "r2drive",
   "version": "0.1.0",
-  "private": true,
+  "description": "A modern desktop file manager for Cloudflare R2 storage with intuitive drag & drop interface",
+  "keywords": ["cloudflare", "r2", "file-manager", "desktop", "tauri", "nextjs", "storage", "s3-compatible"],
+  "homepage": "https://github.com/falgom4/R2Drive",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/falgom4/R2Drive.git"
+  },
+  "bugs": {
+    "url": "https://github.com/falgom4/R2Drive/issues"
+  },
+  "author": {
+    "name": "falgom4",
+    "email": "falgm4@gmail.com",
+    "url": "https://github.com/falgom4"
+  },
+  "license": "MIT",
+  "main": "bin/r2drive.js",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "app/",
+    "public/",
+    "*.md",
+    "*.json",
+    "next.config.ts",
+    "tailwind.config.ts",
+    "postcss.config.mjs",
+    "tsconfig.json",
+    "eslint.config.mjs"
+  ],
+  "bin": {
+    "r2drive": "./bin/r2drive.js"
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
@@ -10,7 +44,11 @@
     "tauri": "tauri",
     "tauri:dev": "tauri dev",
     "tauri:build": "tauri build",
-    "build:static": "next build && next export"
+    "build:static": "next build && next export",
+    "postinstall": "node bin/postinstall.js",
+    "r2drive": "node bin/r2drive.js",
+    "web": "node bin/r2drive.js --web",
+    "desktop": "node bin/r2drive.js"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.782.0",
