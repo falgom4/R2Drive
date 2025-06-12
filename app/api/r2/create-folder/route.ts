@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getR2Client, getBucketName, hasR2Config } from '../../../lib/r2-server';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     if (!hasR2Config()) {

@@ -1,6 +1,8 @@
 import { renameFolder, hasR2Config } from '@/app/lib/r2-server';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     // Verificar que hay configuración antes de intentar conectar

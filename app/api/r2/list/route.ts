@@ -2,6 +2,8 @@ import { ListObjectsV2Command } from '@aws-sdk/client-s3';
 import { getR2Client, getBucketName, hasR2Config } from '@/app/lib/r2-server';
 import { NextRequest, NextResponse } from 'next/server';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: NextRequest) {
   try {
     // Verificar que hay configuración antes de intentar conectar

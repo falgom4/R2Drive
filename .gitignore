@@ -45,3 +45,6 @@ next-env.d.ts
 
 # Carpeta subir-r2 (repositorio git dentro del proyecto)
 /subir-r2/
+
+# Tauri
+/src-tauri/target/

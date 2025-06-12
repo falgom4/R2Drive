@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { access } from 'fs/promises';
 import path from 'path';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
   try {
     const envPath = path.join(process.cwd(), '.env.local');
